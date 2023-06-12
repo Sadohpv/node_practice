@@ -13,6 +13,11 @@ module.exports = (sequelize, DataTypes) => {
   }
   AllCode.init(
     {
+      idCode: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
       key: DataTypes.STRING,
       type: DataTypes.STRING,
       valueEn: DataTypes.STRING,

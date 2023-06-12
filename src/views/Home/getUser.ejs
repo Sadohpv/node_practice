@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get User</title>
+</head>
+<style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+    </style>
+<body>
+    <body>
+
+        <h2>HTML Table</h2>
+        
+        <table>
+          <tr>
+            <th>User Name</th>
+            <th>Email</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+
+          </tr>
+          <% for(let i=0; i< dataUsers.length; i++) {%>
+            <tr>
+              <td>
+                <%= dataUsers[i].userName  %>
+              </td>
+              <td>
+                <%= dataUsers[i].email  %>
+                
+
+              </td>
+              <td>
+                <%= dataUsers[i].firstName  %>
+              </td>
+              <td>
+                <%= dataUsers[i].lastName  %>
+
+              </td>
+            </tr>
+         <% } %>
+          
+        </table>
+        
+</body>
+</html>

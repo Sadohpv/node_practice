@@ -12,6 +12,11 @@ module.exports =(sequelize, DataTypes) => {
     }
   }
   Follow.init({
+    idFollow:{
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     idFollower: DataTypes.INTEGER,
     idFollowing: DataTypes.INTEGER,  
   }, {
