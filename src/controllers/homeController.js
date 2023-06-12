@@ -1,5 +1,5 @@
 import db from "../models/index";
-import UserService from '../services/UserService'
+import UserService from "../services/UserService";
 const getHomePage = async (req, res) => {
   try {
     let data = await db.User.findAll();
@@ -14,19 +14,49 @@ const getHomePage = async (req, res) => {
 const getAboutPage = (req, res) => {
   return res.render("Home/about.ejs");
 };
+const getUser = async (req, res) => {
+  let data = await UserService.getAllUser();
+
+  return res.render("Home/getUser.ejs", { dataUsers: data });
+};
 const createUser = async (req, res) => {
   await UserService.createUserService(req.body);
-  return res.send('Check your console to know your data');
+  return res.send("Check your console to know your data");
 };
-const getUser = async (req, res)=>{
-    let data = await UserService.getAllUser();
-  
-  return res.render('Home/getUser.ejs',{dataUsers: data});
+const editUser = async (req, res) => {
+  let userID = req.query.id;
+  if (userID) {
+    let userData = await UserService.getUserInfo(userID);
 
-}
+    return res.render("Home/editUser.ejs", { userEditData: userData });
+  } else {
+    return res.send("Error: No user");
+  }
+};
+const putEditUser = async (req, res) => {
+  let data = req.body;
+  let allUser = await UserService.updateUserService(data);
+  return res.render("Home/getUser.ejs", { dataUsers: allUser });
+};
+
+const deleteUser = async (req, res) => {
+  let id = req.query.id;
+  if (id) {
+    await UserService.deleteUserService(id);
+    return res.send("Delete Success");
+  }else {
+    return res.send("User Not Found");
+
+  }
+  console.log(id);
+};
+
 module.exports = {
   getHomePage,
   getAboutPage,
   createUser,
-  getUser
+  getUser,
+  editUser,
+  putEditUser,
+  deleteUser,
 };
