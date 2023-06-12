@@ -23,10 +23,12 @@ module.exports = (sequelize, DataTypes) => {
     content: DataTypes.STRING,
     likeCount: DataTypes.INTEGER,
     shareCount: DataTypes.INTEGER,
-    sharedIdPost: DataTypes.INTEGER,  
+    shareIdPost: DataTypes.INTEGER,  
+
   }, {
     sequelize,
     modelName: 'Post',
+    freezeTableName : true,
   });
   return Post;
 };

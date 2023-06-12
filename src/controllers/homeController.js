@@ -2,7 +2,7 @@ import db from "../models/index";
 import UserService from "../services/UserService";
 const getHomePage = async (req, res) => {
   try {
-    let data = await db.User.findAll();
+    let data = await db.Post.findAll();
     return res.render("Home/homepage.ejs", {
       data: JSON.stringify(data),
     });
