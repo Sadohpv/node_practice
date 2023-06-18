@@ -48,7 +48,7 @@ const deleteUser = async (req, res) => {
     return res.send("User Not Found");
 
   }
-  console.log(id);
+
 };
 
 module.exports = {

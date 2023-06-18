@@ -143,8 +143,8 @@ const handlelUserLoginService = (email, password) => {
         if (user) {
   
           // Compare password
-          let check = await bcrypt.compareSync(password, user.passWord);
-          console.log(check);
+          let check = bcrypt.compareSync(password, user.passWord);
+     
           if(check){
             userData.errCode = 0;
             userData.errMessage = 'OK! Not found error';
@@ -157,13 +157,13 @@ const handlelUserLoginService = (email, password) => {
           }
           
         } else {
-          userData.error = 2;
+          userData.errCode = 2;
           userData.errMessage = `Your email is not a member of us ! Please register first`;
         }
 
         
       } else {
-        userData.error = 1;
+        userData.errCode = 1;
         userData.errMessage = `Your email is not a member of us ! Please register first`;
       }
       resolve(userData);
