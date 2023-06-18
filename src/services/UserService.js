@@ -25,9 +25,6 @@ const createUserService = async (data) => {
       reject(error);
     }
   });
-
-  console.log("Create services");
-  console.log(data);
 };
 const updateUserService = (data) => {
   return new Promise(async (resolve, reject) => {
@@ -50,8 +47,6 @@ const updateUserService = (data) => {
       reject(error);
     }
   });
-  console.log("Update services");
-  console.log(data);
 };
 const deleteUserService = (id) => {
   return new Promise(async (resolve, reject) => {
@@ -104,10 +99,85 @@ const getUserInfo = (id) => {
     }
   });
 };
+
+const checkUserEmail = (UserEmail) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let user = await db.User.findOne({
+        where: {
+          email: UserEmail,
+        },
+      });
+      if (user) {
+        resolve(user);
+      } else {
+        resolve(user);
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const checkPassword = (UserPassword) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+const handlelUserLoginService = (email, password) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let userData = {};
+      let isExist = await checkUserEmail(email);
+      if (isExist) {
+        // user Exists
+
+        let user = await db.User.findOne({ 
+          attributes: ['email','isAdmin','passWord'],
+          where: { email: email },
+          raw: true
+        });
+        if (user) {
+  
+          // Compare password
+          let check = await bcrypt.compareSync(password, user.passWord);
+          console.log(check);
+          if(check){
+            userData.errCode = 0;
+            userData.errMessage = 'OK! Not found error';
+            delete user.passWord;
+            userData.user = user;
+          }else{
+            userData.errCode = 3;
+            userData.errMessage = 'Wrong password';
+        
+          }
+          
+        } else {
+          userData.error = 2;
+          userData.errMessage = `Your email is not a member of us ! Please register first`;
+        }
+
+        
+      } else {
+        userData.error = 1;
+        userData.errMessage = `Your email is not a member of us ! Please register first`;
+      }
+      resolve(userData);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 export default {
   createUserService,
   updateUserService,
   getAllUser,
   getUserInfo,
   deleteUserService,
+  handlelUserLoginService,
 };
