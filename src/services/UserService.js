@@ -74,6 +74,26 @@ const getAllUser = () => {
   });
 };
 
+const getDataUserService = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let user = await db.User.findOne({
+        attributes: ["idUser","email", "isAdmin", "avatar","userName","firstName","lastName","address"],
+        where: { idUser: id},
+        raw: true,
+      });
+      if (user) {
+        resolve(user);
+      } else {
+        console.log(user);
+      }
+      resolve();
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 const hashUserPassword = (password) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -135,33 +155,28 @@ const handlelUserLoginService = (email, password) => {
       if (isExist) {
         // user Exists
 
-        let user = await db.User.findOne({ 
-          attributes: ['email','isAdmin','passWord'],
+        let user = await db.User.findOne({
+          attributes: ["email", "isAdmin", "passWord"],
           where: { email: email },
-          raw: true
+          raw: true,
         });
         if (user) {
-  
           // Compare password
           let check = bcrypt.compareSync(password, user.passWord);
-     
-          if(check){
+
+          if (check) {
             userData.errCode = 0;
-            userData.errMessage = 'OK! Not found error';
+            userData.errMessage = "OK! Not found error";
             delete user.passWord;
             userData.user = user;
-          }else{
+          } else {
             userData.errCode = 3;
-            userData.errMessage = 'Wrong password';
-        
+            userData.errMessage = "Wrong password";
           }
-          
         } else {
           userData.errCode = 2;
           userData.errMessage = `Your email is not a member of us ! Please register first`;
         }
-
-        
       } else {
         userData.errCode = 1;
         userData.errMessage = `Your email is not a member of us ! Please register first`;
@@ -180,4 +195,5 @@ export default {
   getUserInfo,
   deleteUserService,
   handlelUserLoginService,
+  getDataUserService,
 };
