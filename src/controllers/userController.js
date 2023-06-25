@@ -53,7 +53,23 @@ const handleGetDataUser = async (req, res) => {
   });
 };
 
+const handleCreateUser = async (req, res) =>{
+    
+
+
+
+    let reg = await UserService.createUserService(req.body);
+
+    return res.status(200).json({
+      errCode: reg.errCode,
+      errCodeMessage : reg.message,
+      reg,
+     
+    });
+};
+
 export default {
   handleLogin,
   handleGetDataUser,
+  handleCreateUser
 };

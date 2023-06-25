@@ -6,21 +6,37 @@ const salt = bcrypt.genSaltSync(10);
 const createUserService = async (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let hashPass = await hashUserPassword(data.password);
-      await db.User.create({
-        userName: data.userName,
-        email: data.email,
-        passWord: hashPass,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        avatar: "",
-        gender: data.gender,
-        banAcc: "0",
-        banLikeCom: "0",
-        isAdmin: "0",
-      });
-      console.log("Successfully");
-      resolve("OK Created Successfully");
+      let check = await checkUserEmail(data.email);
+      if (check === true) {
+        console.log(data.email);
+        resolve({
+          errCode: 1,
+          message: " Your email already exists !",
+        });
+      } else {
+        let hashPass = await hashUserPassword(data.password);
+
+        await db.User.create({
+          userName: data.userName,
+          email: data.email,
+          passWord: hashPass,
+          firstName: data.firstName,
+          address: data.address,
+          lastName: data.lastName,
+          phoneNumber: data.phoneNumber,
+          avatar: "",
+          gender: data.gender,
+          banAcc: "0",
+          banLikeCom: "0",
+          isAdmin: "0",
+        });
+        resolve({
+          errCode: 0,
+          message: "OK",
+        });
+      }
+
+     
     } catch (error) {
       reject(error);
     }
@@ -78,8 +94,10 @@ const getDataUserService = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
       let user = await db.User.findOne({
-        attributes: ["idUser","email", "isAdmin", "avatar","userName","firstName","lastName","address"],
-        where: { idUser: id},
+        attributes: {
+          exclude: ["passWord"],
+        },
+        where: { idUser: id },
         raw: true,
       });
       if (user) {
@@ -129,9 +147,9 @@ const checkUserEmail = (UserEmail) => {
         },
       });
       if (user) {
-        resolve(user);
+        resolve(true);
       } else {
-        resolve(user);
+        resolve(false);
       }
     } catch (error) {
       reject(error);
