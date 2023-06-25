@@ -49,7 +49,10 @@ const createUserService = async (data) => {
         });
       }
     } catch (error) {
-      reject(error);
+      reject({
+        errCode: 404,
+        message: "Somgthing wrong with connection",
+      });
     }
   });
 };
