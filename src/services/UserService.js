@@ -8,10 +8,23 @@ const createUserService = async (data) => {
     try {
       let check = await checkUserEmail(data.email);
       if (check === true) {
-        console.log(data.email);
         resolve({
           errCode: 1,
           message: " Your email already exists !",
+        });
+      } else if (
+        !data.email ||
+        !data.password ||
+        !data.userName ||
+        !data.firstName ||
+        !data.lastName ||
+        !data.gender ||
+        !data.phoneNumber ||
+        !data.address
+      ) {
+        resolve({
+          errCode: 2,
+          message: "Missing data required",
         });
       } else {
         let hashPass = await hashUserPassword(data.password);
@@ -35,8 +48,6 @@ const createUserService = async (data) => {
           message: "OK",
         });
       }
-
-     
     } catch (error) {
       reject(error);
     }
