@@ -54,9 +54,6 @@ const handleGetDataUser = async (req, res) => {
 };
 
 const handleCreateUser = async (req, res) =>{
-    
-
-
 
     let reg = await UserService.createUserService(req.body);
 
@@ -68,8 +65,25 @@ const handleCreateUser = async (req, res) =>{
     });
 };
 
+const handleDeleteUser = async (req,res)=>{
+  if(!req.body.idUser) {
+    return res.status(200).json({
+        errCode: 1,
+        errMessage: "Missing required parameters !"
+    })
+  }
+  let message = await UserService.deleteUserService(req.body.idUser);
+  return res.status(200).json(message);
+};
+
+const handleEditUser = async (req,res)=>{
+
+};
+
 export default {
   handleLogin,
   handleGetDataUser,
-  handleCreateUser
+  handleCreateUser,
+  handleDeleteUser,
+  handleEditUser,
 };

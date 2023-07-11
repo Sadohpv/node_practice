@@ -6,7 +6,7 @@ module.exports = {
     return queryInterface.bulkInsert("Follow", [
       {
         idFollower: 1,
-        idFollower: 2,
+        idFollowing: 2,
         createdAt: new Date(),
         updatedAt: new Date(),
       },

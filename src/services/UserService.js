@@ -3,7 +3,7 @@ import db from "../models/index";
 import { where } from "sequelize";
 const salt = bcrypt.genSaltSync(10);
 
-const createUserService = async (data) => {
+const createUserService = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
       let check = await checkUserEmail(data.email);
@@ -49,9 +49,10 @@ const createUserService = async (data) => {
         });
       }
     } catch (error) {
+      console.log(error);
       reject({
         errCode: 404,
-        message: "Somgthing wrong with connection",
+        message: "Something wrong with connection",
       });
     }
   });
@@ -74,18 +75,29 @@ const updateUserService = (data) => {
         resolve(allUser);
       }
     } catch (error) {
-      reject(error);
+      reject({ error });
     }
   });
 };
 const deleteUserService = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let user = await db.User.findOne({ where: { idUser: id } });
+      let user = await db.User.findOne({ where: { idUser: id }, raw: false });
       if (user) {
+        // await db.User.destroy({
+        //   where: { idUser: id },
+        // }); Second way
         await user.destroy();
+      } else {
+        resolve({
+          errCode: 1,
+          errMessage: `The user isn't exist`,
+        });
       }
-      resolve();
+      resolve({
+        errCode: 0,
+        errMessage: `The user is deleted !`,
+      });
     } catch (error) {
       reject(error);
     }
