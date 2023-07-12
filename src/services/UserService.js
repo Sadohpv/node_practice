@@ -128,9 +128,8 @@ const getDataUserService = (id) => {
       });
       if (user) {
         resolve(user);
-      } else {
-        console.log(user);
-      }
+      } 
+   
       resolve();
     } catch (error) {
       reject(error);

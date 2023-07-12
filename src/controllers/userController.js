@@ -41,11 +41,10 @@ const handleGetDataUser = async (req, res) => {
   //let id = req.query.id;
   // let id = req.body.id;
   let id =req.params.id;
-  console.log(req.params)
-  console.log(id);
+
   let reg = await UserService.getDataUserService(id);
   
-  // console.log(reg);
+  console.log(reg);
   return res.status(200).json({
       errCode: 0,
       errCodeMessage: "Check read data user",
