@@ -57,23 +57,33 @@ const createUserService = (data) => {
     }
   });
 };
-const updateUserService = (data) => {
+const updateUserService = (attribute,data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let user = await db.User.findOne({ where: { idUser: data.idUser } });
+      //let user = await db.User.findOne({ where: { idUser: data.idUser } });
+      
+      // if (user) {
+      //   user.userName = data.userName;
+      //   user.firstName = data.firstName;
+      //   user.lastName = data.lastName;
+      //   await user.save();
 
-      if (user) {
-        user.userName = data.userName;
-        user.firstName = data.firstName;
-        user.lastName = data.lastName;
-        await user.save();
+      //   let allUser = await db.User.findAll();
 
-        let allUser = await db.User.findAll();
-
-        resolve(allUser);
-      } else {
-        resolve(allUser);
+      //   resolve(allUser);
+      // } else {
+      //   resolve(allUser);
+      // }
+      if(attribute === 'email'){
+          console.log("Change Email!")
+      }else if(attribute === 'firstName'){
+        console.log("Change First Name!")
       }
+
+      resolve({
+        attribute : attribute,
+        data,data
+      })
     } catch (error) {
       reject({ error });
     }

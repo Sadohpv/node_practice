@@ -76,7 +76,15 @@ const handleDeleteUser = async (req,res)=>{
 };
 
 const handleEditUser = async (req,res)=>{
+  let attribute =req.params.attribute;
 
+  let data = req.body[attribute];
+  
+  let reg = await UserService.updateUserService(attribute,data);
+  return res.status(200).json({
+    message: "Edit User",
+    reg,
+  });
 };
 
 export default {
