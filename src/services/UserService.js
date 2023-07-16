@@ -57,36 +57,39 @@ const createUserService = (data) => {
     }
   });
 };
-const updateUserService = (attribute,data) => {
+const updateUserService = (attribute, data, idUser) => {
   return new Promise(async (resolve, reject) => {
     try {
-      //let user = await db.User.findOne({ where: { idUser: data.idUser } });
-      
-      // if (user) {
-      //   user.userName = data.userName;
-      //   user.firstName = data.firstName;
-      //   user.lastName = data.lastName;
-      //   await user.save();
+      let user = await db.User.findOne({ where: { idUser: idUser } });
 
-      //   let allUser = await db.User.findAll();
+      if (user) {
+        // user.firstName = data.firstName;
+        // user.lastName = data.lastName;
+        // await user.save();
+        // let allUser = await db.User.findAll();
+        // resolve(allUser);
+        if (attribute === "email") {
+          console.log("Change Email!");
 
-      //   resolve(allUser);
-      // } else {
-      //   resolve(allUser);
-      // }
-      if(attribute === 'email'){
-          console.log("Change Email!")
-      }else if(attribute === 'firstName'){
-        console.log("Change First Name!")
+          // user.email = data;
+
+        } else if (attribute === "firstName") {
+          console.log("Change First Name!");
+        } else if (attribute === "lastName") {
+          console.log("Change Last Name!");
+        } else if (attribute === "address") {
+          console.log("Change Address!");
+        } else if (attribute === "phoneNumber") {
+          console.log("Change PhoneNumber!");
+        }
+      } else {
+        resolve("None");
       }
 
-      resolve({
-        attribute : attribute,
-        data,data
-      })
     } catch (error) {
       reject({ error });
     }
+       
   });
 };
 const deleteUserService = (id) => {
@@ -138,8 +141,8 @@ const getDataUserService = (id) => {
       });
       if (user) {
         resolve(user);
-      } 
-   
+      }
+
       resolve();
     } catch (error) {
       reject(error);
@@ -209,7 +212,7 @@ const handlelUserLoginService = (email, password) => {
         // user Exists
 
         let user = await db.User.findOne({
-          attributes: ["email", "isAdmin", "passWord"],
+          attributes: ["idUser", "email", "isAdmin", "passWord"],
           where: { email: email },
           raw: true,
         });

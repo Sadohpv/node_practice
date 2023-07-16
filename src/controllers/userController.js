@@ -24,8 +24,9 @@ const handleLogin = async (req, res) => {
   let userData = await UserService.handlelUserLoginService(email, password);
 
   //Create JWT
+  
   const accessToken = jwt.sign(
-    { userData: userData.email },
+    { userData: userData.user },
     process.env.ACCESS_TOKEN
   );
 
@@ -44,7 +45,7 @@ const handleGetDataUser = async (req, res) => {
 
   let reg = await UserService.getDataUserService(id);
   
-  console.log(reg);
+ 
   return res.status(200).json({
       errCode: 0,
       errCodeMessage: "Check read data user",
@@ -77,10 +78,23 @@ const handleDeleteUser = async (req,res)=>{
 
 const handleEditUser = async (req,res)=>{
   let attribute =req.params.attribute;
+  console.log(req.body);
+  let data = req.body.data;
+  let token =req.body.tokenData;
+  try {
+    var decoded = await jwt.decode(token, process.env.ACCESS_TOKEN);
+    // const idser = decoded.userData.user.id;
+  } catch(err) {
+    return res.status(200).json({
+      errCode:1,
+      message: "Something wrong happen !!",
+    });
+  }
+  // // var decode = jwt.verify(token, process.env.ACCESS_TOKEN);
+  // console.log(decode);
+  const idUser = decoded.userData.user.idUser;
+  let reg = await UserService.updateUserService(attribute,data,idUser);
 
-  let data = req.body[attribute];
-  
-  let reg = await UserService.updateUserService(attribute,data);
   return res.status(200).json({
     message: "Edit User",
     reg,
