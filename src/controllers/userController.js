@@ -90,10 +90,11 @@ const handleEditUser = async (req,res)=>{
       message: "Something wrong happen !!",
     });
   }
-  // // var decode = jwt.verify(token, process.env.ACCESS_TOKEN);
-  // console.log(decode);
+  
   const idUser = decoded.userData.user.idUser;
   let reg = await UserService.updateUserService(attribute,data,idUser);
+
+  console.log(reg);
 
   return res.status(200).json({
     message: "Edit User",

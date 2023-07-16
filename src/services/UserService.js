@@ -60,8 +60,11 @@ const createUserService = (data) => {
 const updateUserService = (attribute, data, idUser) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let user = await db.User.findOne({ where: { idUser: idUser } });
-
+      let user = await db.User.findOne({
+        where: { idUser: idUser },
+        raw: false,
+      });
+      let message;
       if (user) {
         // user.firstName = data.firstName;
         // user.lastName = data.lastName;
@@ -69,27 +72,35 @@ const updateUserService = (attribute, data, idUser) => {
         // let allUser = await db.User.findAll();
         // resolve(allUser);
         if (attribute === "email") {
-          console.log("Change Email!");
-
-          // user.email = data;
-
+          user.email = data;
+          message = "Your email has been changed success!!!";
         } else if (attribute === "firstName") {
-          console.log("Change First Name!");
+          user.firstName = data;
+          message = "You just change your first name!!!";
         } else if (attribute === "lastName") {
-          console.log("Change Last Name!");
+          user.lastName = data;
+          message = "You just change your last name!!!";
         } else if (attribute === "address") {
-          console.log("Change Address!");
+          user.address = data;
+          message = "Move to another place huh !!!";
         } else if (attribute === "phoneNumber") {
-          console.log("Change PhoneNumber!");
+          user.phoneNumber = data;
+          message = "Your phone number has been change !!!";
+        } else {
+          message = "We don't know what you wanna do !!!";
         }
+        await user.save();
       } else {
         resolve("None");
       }
 
+      resolve({
+        errCode: 0,
+        message: message,
+      });
     } catch (error) {
       reject({ error });
     }
-       
   });
 };
 const deleteUserService = (id) => {
