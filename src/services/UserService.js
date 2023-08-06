@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import db from "../models/index";
-import { where } from "sequelize";
+import { where, Op } from "sequelize";
 const salt = bcrypt.genSaltSync(10);
 
 const createUserService = (data) => {
@@ -255,6 +255,32 @@ const handlelUserLoginService = (email, password) => {
   });
 };
 
+const handleSearchService = (keyWord)=>{
+  
+  return new Promise(async (resolve, reject) => {
+    try {
+      let user = await db.User.findAll({
+        attributes: {
+          exclude: ["passWord"],
+        },
+        where: {
+          userName: {
+              [Op.like] :  `%${keyWord}%`
+          }
+        
+        },
+      });
+      if (user) {
+        resolve(user);
+      } else {
+        resolve(false);
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
 export default {
   createUserService,
   updateUserService,
@@ -263,4 +289,5 @@ export default {
   deleteUserService,
   handlelUserLoginService,
   getDataUserService,
+  handleSearchService,
 };

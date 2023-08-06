@@ -78,7 +78,7 @@ const handleDeleteUser = async (req,res)=>{
 
 const handleEditUser = async (req,res)=>{
   let attribute =req.params.attribute;
-  console.log(req.body);
+ 
   let data = req.body.data;
   let token =req.body.tokenData;
   try {
@@ -101,11 +101,28 @@ const handleEditUser = async (req,res)=>{
     reg,
   });
 };
+const handleSearchUser = async (req,res)=>{
+    let keyWord = req.body.keyWordSearch;
+    if(keyWord){
+      
+      let reg = await UserService.handleSearchService(keyWord.trim());
 
+      return res.status(200).json({
+        message: "Search User",
+        reg,
+      });
+    }else{
+      return res.status(200).json({
+        errCode:1,
+        message: "Something wrong happen !!",
+      });
+    }
+};
 export default {
   handleLogin,
   handleGetDataUser,
   handleCreateUser,
   handleDeleteUser,
   handleEditUser,
+  handleSearchUser
 };
