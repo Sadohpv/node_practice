@@ -16,6 +16,9 @@ module.exports = {
       content: {
         type: Sequelize.STRING,
       },
+      imgPost: {
+        type: Sequelize.STRING,
+      },
       likeCount: {
         type: Sequelize.INTEGER,
       },

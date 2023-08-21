@@ -1,12 +1,15 @@
 import express from "express";
 import 'dotenv/config';
 import bodyParser from "body-parser";
+import fileUpload from "express-fileupload";
 import initWebRoutes from './routes/web'
 import configViewEngine from "./config/viewEngine";
 import { connectDB } from "./config/connectDB";
 import cors from 'cors'
 const app = express();
 app.use(cors());
+app.use(fileUpload());
+// app.use(express.static("files"));
 // Add headers before the routes are defined
 // app.use(function (req, res, next) {
 

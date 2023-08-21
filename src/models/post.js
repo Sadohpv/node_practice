@@ -1,6 +1,8 @@
 'use strict';
-import { Model } from 'sequelize';
-export default (sequelize, DataTypes) => {
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
   class Post extends Model {
     /**
      * Helper method for defining associations.
@@ -19,6 +21,8 @@ export default (sequelize, DataTypes) => {
     },
     idWhoPost: DataTypes.INTEGER,
     content: DataTypes.STRING,
+    imgPost: DataTypes.STRING,
+
     likeCount: DataTypes.INTEGER,
     shareCount: DataTypes.INTEGER,
     shareIdPost: DataTypes.INTEGER,  
@@ -27,9 +31,6 @@ export default (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Post',
     freezeTableName : true,
-    
   });
-
-  
   return Post;
 };

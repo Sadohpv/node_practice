@@ -143,10 +143,12 @@ const getAllUser = () => {
 const getDataUserService = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let user = await db.User.findOne({
+      let user = await db.User.findAll({
         attributes: {
           exclude: ["passWord"],
+         
         },
+        
         where: { idUser: id },
         raw: true,
       });

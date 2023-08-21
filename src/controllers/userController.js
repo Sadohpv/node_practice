@@ -118,6 +118,7 @@ const handleSearchUser = async (req,res)=>{
       });
     }
 };
+
 export default {
   handleLogin,
   handleGetDataUser,
