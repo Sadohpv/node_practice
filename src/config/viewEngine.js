@@ -1,8 +1,8 @@
 import express from "express";
 
 function configViewEngine(app) {
-   app.use('public', express.static("./src/public"));
-   app.use('src', express.static("./src"));
+   app.use('/data', express.static("./src/data"));
+  
 
    app.set('view engine','ejs');
    app.set('views','./src/views');

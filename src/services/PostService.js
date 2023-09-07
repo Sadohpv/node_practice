@@ -1,32 +1,59 @@
 import db from "../models/index";
 import { where, Op } from "sequelize";
+import { cloudinary } from "../utils/cloudinary";
 
 const handleGetPostService = () => {
   return new Promise(async (resolve, reject) => {
     try {
       let post = await db.Post.findAll({
-        include:[ db.User ],
-        raw: false,
+        include: [{
+          model: db.User,
+          attributes: ['idUser', 'userName', 'avatar']  
+        }],
+        raw: true,
+        nest : true
       });
+      
+      // const result = post.map(row => {
+      //   row.imgPost = "File IMG";
+      //   // console.log(row["imgPost"]); 
+        
+      // })
+      
       resolve(post);
     } catch (error) {
       reject(error);
     }
   });
 };
-const handleAddPostService = (data,file) => {
+const handleAddPostService = (idWhoPost,data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!data.idWhoPost || !data.content) {
+      if (!idWhoPost|| !data.content) {
         resolve({
           errCode: 2,
           message: "Missing data required",
         });
       } else {
+        // let storageImg =
+        //   `D:/Subject/LearnSomething/ReactJS/Test_React/Test4/node_practice/src/data/post/user${idWhoPost}/` +
+        //   file.name;
+
+        // file.mv(storageImg, (err) => {
+        //   if (err) {
+        //     console.log(err);
+        //   }
+        // });
+       
+        
+        const storageImg = await cloudinary.uploader.upload(data.image,{
+          folder : 'social_data',
+        })
+        console.log(storageImg);
         await db.Post.create({
-          idWhoPost: data.idWhoPost,
+          idWhoPost: idWhoPost,
           content: data.content,
-          imgPost: data.imgPost,
+          imgPost: storageImg.url,
           likeCount: 0,
           shareCount: 0,
           shareIdPost: null,

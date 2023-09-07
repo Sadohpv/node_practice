@@ -29,7 +29,7 @@ app.use(fileUpload());
 // });
 //config app
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '100mb'}));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const port = process.env.PORT || 3000;
