@@ -127,9 +127,43 @@ const handleDeletePostService = (data) => {
     }
   });
 };
+
+const handleLikedPostService = (data)=>{
+  return new Promise(async (resolve, reject) => {
+    try {
+      let liked = await db.LikePost.findOne({
+        where:{idPost:data.idPost,idUserLikePost:data.idUser},
+        raw : false,
+      })
+      if(liked && data.liked ===false){
+        console.log("Unlike");
+        
+        await liked.destroy();
+        resolve({
+          errCode: 0,
+          message: "UnLike",
+        });
+      }
+      if(liked === null && data.liked === true){
+        await db.LikePost.create({
+          idPost:data.idPost,
+          idUserLikePost:data.idUser
+        });
+        resolve({
+          errCode: 0,
+          message: "Like",
+        });
+      }
+      console.log(liked)
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
 export default {
   handleGetPostService,
   handleAddPostService,
   handleUpdatePostService,
   handleDeletePostService,
+  handleLikedPostService
 };

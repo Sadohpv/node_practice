@@ -7,4 +7,5 @@ router.get('/getPost',postController.handleGetPost);
 router.post('/addPost',postController.handleAddPost); 
 router.put('/putPost',postController.handleUpdatePost);
 router.delete('/deletePost',postController.handleDeletePost);
+router.put('/likedPost',postController.handleLikedPost);
 module.exports = router;

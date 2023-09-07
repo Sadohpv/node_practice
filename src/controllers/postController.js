@@ -108,9 +108,28 @@ const handleDeletePost =  async (req,res)=>{
     }
   }
 };
+const handleLikedPost =   async (req, res)=>{
+  let data = req.body;
+  // console.log(data);
+  if(data){
+    let reg = await PostService.handleLikedPostService(data);
+    return res.status(200).json({
+      errCode: 0,
+      message: "Change Liked",
+      reg,
+    });
+  }
+
+  return res.status(200).json({
+    errCode: 5,
+    message: "Something Wrong !",
+    
+  });
+}
 export default {
   handleGetPost,
   handleAddPost,
   handleUpdatePost,
-  handleDeletePost
+  handleDeletePost,
+  handleLikedPost
 };
