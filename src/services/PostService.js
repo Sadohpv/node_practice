@@ -2,34 +2,44 @@ import db from "../models/index";
 import { where, Op } from "sequelize";
 import { cloudinary } from "../utils/cloudinary";
 
-const handleGetPostService = () => {
+const handleGetPostService = (idUser) => {
   return new Promise(async (resolve, reject) => {
     try {
       let post = await db.Post.findAll({
-        include: [{
-          model: db.User,
-          attributes: ['idUser', 'userName', 'avatar']  
-        }],
+        include: [
+          {
+            model: db.User,
+            attributes: ["idUser", "userName", "avatar"],
+          },
+        ],
         raw: true,
-        nest : true
+        nest: true,
       });
-      
+
       // const result = post.map(row => {
       //   row.imgPost = "File IMG";
-      //   // console.log(row["imgPost"]); 
-        
+      //   // console.log(row["imgPost"]);
+
       // })
-      
+      const liked = await handleCheckLikeService(idUser);
+      post.map(p => {
+        if(liked.includes(p.idPost)){
+          p.userLiked = true;
+        }else{
+          p.userLiked = false;
+        }
+      });
+      // console.log(post);
       resolve(post);
     } catch (error) {
       reject(error);
     }
   });
 };
-const handleAddPostService = (idWhoPost,data) => {
+const handleAddPostService = (idWhoPost, data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!idWhoPost|| !data.content) {
+      if (!idWhoPost || !data.content) {
         resolve({
           errCode: 2,
           message: "Missing data required",
@@ -44,11 +54,10 @@ const handleAddPostService = (idWhoPost,data) => {
         //     console.log(err);
         //   }
         // });
-       
-        
-        const storageImg = await cloudinary.uploader.upload(data.image,{
-          folder : 'social_data',
-        })
+
+        const storageImg = await cloudinary.uploader.upload(data.image, {
+          folder: "social_data",
+        });
         console.log(storageImg);
         await db.Post.create({
           idWhoPost: idWhoPost,
@@ -128,42 +137,78 @@ const handleDeletePostService = (data) => {
   });
 };
 
-const handleLikedPostService = (data)=>{
+const handleLikedPostService = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let liked = await db.LikePost.findOne({
-        where:{idPost:data.idPost,idUserLikePost:data.idUser},
-        raw : false,
-      })
-      if(liked && data.liked ===false){
-        console.log("Unlike");
-        
-        await liked.destroy();
+      let likedPost = await db.LikePost.findOne({
+        where: { idPostLiked: data.idPost, idUserLikePost: data.idUser },
+        raw: false,
+      });
+      if (likedPost) {
+        if (data.liked === false) {
+          likedPost.liked = 0;
+          await likedPost.save();
+          resolve({
+            errCode: 0,
+            message: "UnLike",
+          });
+        } else {
+          likedPost.liked = 1;
+          await likedPost.save();
+          resolve({
+            errCode: 0,
+            message: "Like",
+          });
+        }
+      } else {
         resolve({
           errCode: 0,
           message: "UnLike",
         });
       }
-      if(liked === null && data.liked === true){
-        await db.LikePost.create({
-          idPost:data.idPost,
-          idUserLikePost:data.idUser
-        });
-        resolve({
-          errCode: 0,
-          message: "Like",
-        });
+      if (likedPost === null) {
+        if (data.liked === true) {
+          await db.LikePost.create({
+            idPostLiked: data.idPost,
+            idUserLikePost: data.idUser,
+            liked: 1,
+          });
+          resolve({
+            errCode: 0,
+            message: "Like",
+          });
+        }
       }
-      console.log(liked)
     } catch (error) {
       reject(error);
     }
   });
-}
+};
+const handleCheckLikeService = async (data) => {
+
+      let likedPost = await db.LikePost.findAll({
+        where: {
+          idUserLikePost: data,
+          liked : 1,
+        },
+        attributes: ["idPostLiked"],
+
+        raw: true,
+      });
+      let result = [];
+      likedPost.map(p =>{
+        result.push(p.idPostLiked)
+      })
+      // const result = Object.values(likedPost);
+  
+      return result;
+  };
+
 export default {
   handleGetPostService,
   handleAddPostService,
   handleUpdatePostService,
   handleDeletePostService,
-  handleLikedPostService
+  handleLikedPostService,
+  handleCheckLikeService,
 };

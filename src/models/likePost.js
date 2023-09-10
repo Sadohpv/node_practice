@@ -17,9 +17,9 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
       primaryKey: true,
     },
-    idPost: DataTypes.INTEGER,
+    idPostLiked: DataTypes.INTEGER,
     idUserLikePost: DataTypes.INTEGER,
-    
+    liked : DataTypes.BOOLEAN,
   }, {
     sequelize,
     modelName: 'LikePost',

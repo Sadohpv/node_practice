@@ -55,5 +55,15 @@ db.Post.belongsTo(db.User, {
   foreignKey: 'idWhoPost',
   
 })
+db.Post.hasMany(db.LikePost,{
+  foreignKey: 'idPostLiked',
+})
+// db.Post.hasMany(db.LikePosts,{
+//   foreignKey: 'idPostLiked',
+// })
 
+db.LikePost.belongsTo(db.Post, {
+  foreignKey: 'idPostLiked',
+  
+})
 module.exports = db;

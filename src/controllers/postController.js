@@ -3,7 +3,8 @@ import path from "path";
 var jwt = require("jsonwebtoken");
 import "dotenv";
 const handleGetPost = async (req, res) => {
-  let reg = await PostService.handleGetPostService();
+  let data = req.params;
+  let reg = await PostService.handleGetPostService(data.check);
  
   
   // console.log(reg);
@@ -126,10 +127,29 @@ const handleLikedPost =   async (req, res)=>{
     
   });
 }
+const handleCheckLike =  async (req, res)=>{
+  let data = req.params;
+  // console.log(data);
+  if(data){
+    // let reg = await PostService.handleCheckLikeService(data);
+    return res.status(200).json({
+      errCode: 0,
+      message: "Check Liked",
+      reg,
+    });
+  }
+
+  return res.status(200).json({
+    errCode: 5,
+    message: "Something Wrong !",
+    
+  });
+}
 export default {
   handleGetPost,
   handleAddPost,
   handleUpdatePost,
   handleDeletePost,
-  handleLikedPost
+  handleLikedPost,
+  handleCheckLike
 };
