@@ -13,7 +13,7 @@ const handleGetPostService = (idUser) => {
           },
         ],
         raw: true,
-        nest: true,
+        nest: true, // group include model into 1 object
       });
 
       // const result = post.map(row => {

@@ -41,7 +41,7 @@ const createUserService = (data) => {
           gender: data.gender,
           banAcc: "0",
           banLikeCom: "0",
-          isAdmin: "0",
+          level_id: "4",
         });
         resolve({
           errCode: 0,
@@ -225,7 +225,7 @@ const handlelUserLoginService = (email, password) => {
         // user Exists
 
         let user = await db.User.findOne({
-          attributes: ["idUser", "email", "isAdmin", "passWord"],
+          attributes: ["idUser", "email", "level_id", "passWord"],
           where: { email: email },
           raw: true,
         });

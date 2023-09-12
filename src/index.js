@@ -6,8 +6,12 @@ import initWebRoutes from './routes/web'
 import configViewEngine from "./config/viewEngine";
 import { connectDB } from "./config/connectDB";
 import cors from 'cors'
+import cookieParser from "cookie-parser";
 const app = express();
-app.use(cors());
+let corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true };
+app.use(cors(corsOptions));
 app.use(fileUpload());
 // app.use(express.static("files"));
 // Add headers before the routes are defined
@@ -27,13 +31,23 @@ app.use(fileUpload());
 //     // Pass to next layer of middleware
 //     next();
 // });
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", 'http://localhost:3000');
+  res.header("Access-Control-Allow-Credentials", true);
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
+  next();
+});
 //config app
 
 app.use(bodyParser.json({limit: '100mb'}));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const port = process.env.PORT || 3000;
+//config cookie parser
+app.use(cookieParser());
 
+//config web router
 configViewEngine(app);
 initWebRoutes(app);
 

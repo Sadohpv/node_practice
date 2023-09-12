@@ -43,8 +43,8 @@ module.exports = {
       gender: {
         type: Sequelize.BOOLEAN,
       },
-      isAdmin: {
-        type: Sequelize.BOOLEAN,
+      level_id: {
+        type: Sequelize.INTEGER,
       },
       createdAt: {
         allowNull: false,

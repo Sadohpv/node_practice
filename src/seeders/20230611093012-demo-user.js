@@ -14,7 +14,7 @@ module.exports = {
         gender: 0,
         banAcc: 0,
         banLikeCom: 0,
-        isAdmin: 1,
+        level_id: 4,
         createdAt: new Date(),
         updatedAt: new Date(),
       },

@@ -11,6 +11,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      User.belongsTo(models.Level,{
+        foreignKey: 'level_id',
+      });
+      User.hasOne(models.Friend,{
+        foreignKey: 'friend_1',
+      });
+      User.hasOne(models.Friend,{
+        foreignKey: 'friend_2',
+      });
     }
   }
   User.init({
@@ -31,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     phoneNumber: DataTypes.STRING,
     banAcc : DataTypes.BOOLEAN,
     banLikeCom : DataTypes.BOOLEAN,
-    isAdmin : DataTypes.BOOLEAN,
+    level_id : DataTypes.BOOLEAN,
   }, {
     sequelize,
     modelName: 'User',

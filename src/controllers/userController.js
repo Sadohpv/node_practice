@@ -14,6 +14,7 @@ const handleLogin = async (req, res) => {
   // Check email and password
   if (!email || !password) {
     let userData = {};
+    console.log("Here");
     handleMissingData(userData);
     return res.status(200).json({
       userData,
@@ -24,12 +25,11 @@ const handleLogin = async (req, res) => {
   let userData = await UserService.handlelUserLoginService(email, password);
 
   //Create JWT
-  
   const accessToken = jwt.sign(
     { userData: userData.user },
     process.env.ACCESS_TOKEN
   );
-
+  res.cookie("token",accessToken, {httpOnly:true, maxAge : 60 *1000})
   // return userInfor
   return res.status(200).json({
     userData,
