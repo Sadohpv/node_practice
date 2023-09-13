@@ -1,7 +1,7 @@
-'use strict';
-import { Model } from 'sequelize';
+"use strict";
+import { Model } from "sequelize";
 module.exports = (sequelize, DataTypes) => {
-  class Role extends Model {
+  class Roles extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,22 +9,27 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Role.belongsToMany(models.Level,{through : 'LevelRole'});
-
+      Roles.belongsToMany(models.Level, {
+        through: "LevelRole",
+        foreignKey: "level_id",
+      });
     }
   }
-  Role.init({
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
+  Roles.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      url: DataTypes.STRING,
     },
-    name: DataTypes.STRING,
-    
-  }, {
-    sequelize,
-    modelName: 'Role',
-    
-  });
-  return Role;
+    {
+      sequelize,
+      modelName: "Roles",
+    freezeTableName : true,
+
+    }
+  );
+  return Roles;
 };

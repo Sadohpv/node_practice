@@ -14,7 +14,7 @@ const initWebRoutes = (app) => {
     // router.get('/editUser', homeController.editUser);
     // router.post('/putEditUser', homeController.putEditUser);
     // router.get('/deleteUser', homeController.deleteUser);
-  
+    router.get('/roles',homeController.checkRoles);
     app.use('/api',userRouter);
     app.use('/post',postRouter);
 

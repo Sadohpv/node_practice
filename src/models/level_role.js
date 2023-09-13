@@ -9,6 +9,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      LevelRole.hasMany(models.Level,{
+        foreignKey: 'id',
+      });
+      LevelRole.hasMany(models.Roles,{
+        foreignKey: 'id',
+      });
     }
   }
   LevelRole.init({

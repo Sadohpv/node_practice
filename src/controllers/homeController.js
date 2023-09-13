@@ -50,7 +50,15 @@ const deleteUser = async (req, res) => {
   }
 
 };
+const checkRoles = async (req, res) => {
+  let data = req.body.id;
+    let reg = await UserService.checkRoleService(data);
+    return res.status(200).json({
+      reg: reg,
+    });
+ 
 
+};
 module.exports = {
   getHomePage,
   getAboutPage,
@@ -59,4 +67,5 @@ module.exports = {
   editUser,
   putEditUser,
   deleteUser,
+  checkRoles
 };

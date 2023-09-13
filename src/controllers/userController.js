@@ -29,7 +29,7 @@ const handleLogin = async (req, res) => {
     { userData: userData.user },
     process.env.ACCESS_TOKEN
   );
-  res.cookie("token",accessToken, {httpOnly:true, maxAge : 60 *1000})
+  res.cookie("token",accessToken, {httpOnly:true, maxAge : 60*60 *1000})
   // return userInfor
   return res.status(200).json({
     userData,

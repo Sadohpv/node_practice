@@ -1,5 +1,5 @@
-'use strict';
-import { Model } from 'sequelize';
+"use strict";
+import { Model } from "sequelize";
 module.exports = (sequelize, DataTypes) => {
   class Level extends Model {
     /**
@@ -9,24 +9,28 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Level.hasMany(models.User,{
-        foreignKey: 'level_id',
+      Level.hasMany(models.User, {
+        foreignKey: "level_id",
       });
-      Level.belongsToMany(models.Role,{through : 'LevelRole'});
+      Level.belongsToMany(models.Roles, {
+        through: "LevelRole",
+        foreignKey: "role_id",
+      });
     }
   }
-  Level.init({
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
+  Level.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      name: DataTypes.STRING,
     },
-    name: DataTypes.STRING,
-    
-  }, {
-    sequelize,
-    modelName: 'Level',
-    
-  });
+    {
+      sequelize,
+      modelName: "Level",
+    }
+  );
   return Level;
 };
