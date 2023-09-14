@@ -26,7 +26,7 @@ const handleLogin = async (req, res) => {
 
   //Create JWT
   const accessToken = jwt.sign(
-    { userData: userData.user },
+    { userData: userData.user, roles : userData.roles },
     process.env.ACCESS_TOKEN
   );
   res.cookie("token",accessToken, {httpOnly:true, maxAge : 60*60 *1000})

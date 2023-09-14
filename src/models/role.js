@@ -9,10 +9,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
       Roles.belongsToMany(models.Level, {
         through: "LevelRole",
+        as: "Level",
+
         foreignKey: "level_id",
       });
+      // Roles.hasMany(models.LevelRoles);
     }
   }
   Roles.init(
@@ -27,8 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Roles",
-    freezeTableName : true,
-
+      freezeTableName: true,
     }
   );
   return Roles;

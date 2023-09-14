@@ -9,11 +9,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      LevelRole.hasMany(models.Level,{
-        foreignKey: 'id',
+      LevelRole.belongsTo(models.Level,{
+        foreignKey: 'level_id',
       });
-      LevelRole.hasMany(models.Roles,{
-        foreignKey: 'id',
+      LevelRole.belongsTo(models.Roles,{
+        foreignKey: 'role_id',
       });
     }
   }

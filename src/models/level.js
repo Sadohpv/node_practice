@@ -14,8 +14,11 @@ module.exports = (sequelize, DataTypes) => {
       });
       Level.belongsToMany(models.Roles, {
         through: "LevelRole",
+        as : "Roles",
         foreignKey: "role_id",
       });
+      
+      // Level.hasMany(models.LevelRoles);
     }
   }
   Level.init(

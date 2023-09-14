@@ -41,7 +41,9 @@ const checkUserJWT = (req, res, next) => {
     
     if (decoded) {
       req.user = decoded;
+      
       next();
+
     } else {
       return res.status(401).json({
         EC: -1,
@@ -61,7 +63,30 @@ const checkUserPermission = (req,res,next)=>{
   if(noneSecurePaths.includes(req.path)){
     return next();
   }
-  console.log(req.user);
-  return next();
+ 
+    if(req.user.roles){
+     
+     
+      if(req.user.roles.includes(req.baseUrl)){
+
+        return next();
+      }else{
+        return res.status(403).json({
+          EC: -1,
+          DT: "",
+          EM: " You don't have permission to access! ",
+        });
+      };
+    }else{
+      // console.log("Here Error Permission");
+
+      return res.status(403).json({
+        EC: -1,
+        DT: "",
+        EM: " You don't have permission to access! ",
+      });
+    }
+  
+ 
 }
 export { jwtCustom, verifyToken, checkUserJWT,checkUserPermission };

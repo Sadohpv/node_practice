@@ -146,17 +146,15 @@ const getDataUserService = (id) => {
       let user = await db.User.findOne({
         attributes: {
           exclude: ["passWord"],
-         
-        }, where: { idUser: id },
+        },
+        where: { idUser: id },
         raw: true,
       });
       if (user) {
         resolve(user);
-      }else{
-
+      } else {
         resolve();
       }
-
     } catch (error) {
       reject(error);
     }
@@ -238,6 +236,8 @@ const handlelUserLoginService = (email, password) => {
             userData.errMessage = "OK! Not found error";
             delete user.passWord;
             userData.user = user;
+            userData.roles = await checkRoleService(user.level_id);
+
           } else {
             userData.errCode = 3;
             userData.errMessage = "Wrong password";
@@ -250,6 +250,7 @@ const handlelUserLoginService = (email, password) => {
         userData.errCode = 1;
         userData.errMessage = `Your email is not a member of us ! Please register first`;
       }
+      console.log(userData);
       resolve(userData);
     } catch (error) {
       reject(error);
@@ -257,8 +258,7 @@ const handlelUserLoginService = (email, password) => {
   });
 };
 
-const handleSearchService = (keyWord)=>{
-  
+const handleSearchService = (keyWord) => {
   return new Promise(async (resolve, reject) => {
     try {
       let user = await db.User.findAll({
@@ -267,9 +267,8 @@ const handleSearchService = (keyWord)=>{
         },
         where: {
           userName: {
-              [Op.like] :  `%${keyWord}%`
-          }
-        
+            [Op.like]: `%${keyWord}%`,
+          },
         },
       });
       if (user) {
@@ -281,37 +280,36 @@ const handleSearchService = (keyWord)=>{
       reject(error);
     }
   });
-}
-const checkRoleService = (data)=>{
-  return new Promise(async (resolve, reject) => {
-    try {
-      let role = await db.LevelRole.findAll({
-        include: [
-          {
-            model: db.Roles,
-            attributes: ['url'],
-          },
-        ],
-        attributes: [],
-        where: {level_id : data},
-        raw: true,
-        nest: true, // group include model into 1 object
-      });
-      let result = [];
-      role.map(item=>{
-        // console.log(item.Roles.url);
-        result.push(item.Roles.url);
-      })
-      if (result ) {
-        resolve(result);
-      } else {
-        resolve(false);
-      }
-    } catch (error) {
-      reject(error);
+};
+const checkRoleService = async (data) => {
+  try {
+    let role = await db.LevelRole.findAll({
+      include: [
+        {
+          model: db.Roles,
+          attributes: ["url"],
+        },
+      ],
+      attributes: [],
+      where: { level_id: data },
+      raw: true,
+      nest: true, // group include model into 1 object
+    });
+    // console.log(role);
+    let result = [];
+    role.map((item) => {
+      // console.log(item.Roles.url);
+      result.push(item.Role.url);
+    });
+    if (result !== []) {
+      return result;
+    } else {
+      return result;
     }
-  });
-}
+  } catch (error) {
+    return false;
+  }
+};
 export default {
   createUserService,
   updateUserService,
@@ -321,5 +319,5 @@ export default {
   handlelUserLoginService,
   getDataUserService,
   handleSearchService,
-  checkRoleService
+  checkRoleService,
 };
