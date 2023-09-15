@@ -23,7 +23,7 @@ const verifyToken = (token) => {
 };
 
 const noneSecurePaths = ["/login","/getCreateUser"];
-
+const authenticatedPaths = ["/account"];
 const checkUserJWT = (req, res, next) => {
   
   if(noneSecurePaths.includes(req.path)){
@@ -60,7 +60,7 @@ const checkUserJWT = (req, res, next) => {
   }
 };
 const checkUserPermission = (req,res,next)=>{
-  if(noneSecurePaths.includes(req.path)){
+  if(noneSecurePaths.includes(req.path) || authenticatedPaths.includes(req.path)){
     return next();
   }
  

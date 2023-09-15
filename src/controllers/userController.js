@@ -118,12 +118,28 @@ const handleSearchUser = async (req,res)=>{
       });
     }
 };
+const handleGetAccount = async (req,res)=>{
+  // console.log(req.user);
+  if(req.user){
+   return res.status(200).json({
+    EC: 0,
+    reg : req.user,
+  });
+  }else{
+    return res.status(401).json({
+      EC: -1,
 
+        EM: " Not authenticated the user",
+    });
+  };
+ 
+};
 export default {
   handleLogin,
   handleGetDataUser,
   handleCreateUser,
   handleDeleteUser,
   handleEditUser,
-  handleSearchUser
+  handleSearchUser,
+  handleGetAccount
 };
