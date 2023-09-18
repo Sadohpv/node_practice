@@ -80,19 +80,19 @@ const handleEditUser = async (req,res)=>{
   let attribute =req.params.attribute;
  
   let data = req.body.data;
-  let token =req.body.tokenData;
-  try {
-    var decoded = await jwt.decode(token, process.env.ACCESS_TOKEN);
-    // const idser = decoded.userData.user.id;
-  } catch(err) {
-    return res.status(200).json({
-      errCode:1,
-      message: "Something wrong happen !!",
-    });
-  }
+  let userId =req.body.userId;
+  // try {
+  //   var decoded = await jwt.decode(token, process.env.ACCESS_TOKEN);
+  //   // const idser = decoded.userData.user.id;
+  // } catch(err) {
+  //   return res.status(200).json({
+  //     errCode:1,
+  //     message: "Something wrong happen !!",
+  //   });
+  // }
   
-  const idUser = decoded.userData.user.idUser;
-  let reg = await UserService.updateUserService(attribute,data,idUser);
+  // const idUser = decoded.userData.user.idUser;
+  let reg = await UserService.updateUserService(attribute,data,userId);
 
   console.log(reg);
 
