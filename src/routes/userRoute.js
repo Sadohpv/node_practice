@@ -14,5 +14,6 @@ router.post("/getCreateUser", userController.handleCreateUser);
 router.delete("/deleteUser",userController.handleDeleteUser);
 router.put("/edit/:attribute",userController.handleEditUser);
 router.post("/search",userController.handleSearchUser);
+router.get('/friend/getFriend/:id',userController.handleGetAllFriend);
 router.get('/:id',userController.handleGetDataUser); 
 module.exports = router;

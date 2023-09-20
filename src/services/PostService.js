@@ -22,10 +22,10 @@ const handleGetPostService = (idUser) => {
 
       // })
       const liked = await handleCheckLikeService(idUser);
-      post.map(p => {
-        if(liked.includes(p.idPost)){
+      post.map((p) => {
+        if (liked.includes(p.idPost)) {
           p.userLiked = true;
-        }else{
+        } else {
           p.userLiked = false;
         }
       });
@@ -148,31 +148,30 @@ const handleLikedPostService = (data) => {
         if (data.liked === false) {
           likedPost.liked = 0;
           await likedPost.save();
+          handleLikeNumber(data.idPost, -1);
+
           resolve({
             errCode: 0,
             message: "UnLike",
           });
         } else {
           likedPost.liked = 1;
+          handleLikeNumber(data.idPost, 1);
           await likedPost.save();
           resolve({
             errCode: 0,
             message: "Like",
           });
         }
-      } else {
-        resolve({
-          errCode: 0,
-          message: "UnLike",
-        });
-      }
-      if (likedPost === null) {
+      }else if (likedPost === null) {
         if (data.liked === true) {
           await db.LikePost.create({
             idPostLiked: data.idPost,
             idUserLikePost: data.idUser,
             liked: 1,
           });
+          handleLikeNumber(data.idPost, 1);
+
           resolve({
             errCode: 0,
             message: "Like",
@@ -185,25 +184,38 @@ const handleLikedPostService = (data) => {
   });
 };
 const handleCheckLikeService = async (data) => {
+  let likedPost = await db.LikePost.findAll({
+    where: {
+      idUserLikePost: data,
+      liked: 1,
+    },
+    attributes: ["idPostLiked"],
 
-      let likedPost = await db.LikePost.findAll({
-        where: {
-          idUserLikePost: data,
-          liked : 1,
-        },
-        attributes: ["idPostLiked"],
+    raw: true,
+  });
+  let result = [];
+  likedPost.map((p) => {
+    result.push(p.idPostLiked);
+  });
+  // const result = Object.values(likedPost);
 
-        raw: true,
-      });
-      let result = [];
-      likedPost.map(p =>{
-        result.push(p.idPostLiked)
-      })
-      // const result = Object.values(likedPost);
-  
-      return result;
-  };
-
+  return result;
+};
+const handleLikeNumber = async (id, number) => {
+  let post = await db.Post.findOne({
+    where: {
+      idPost: id,
+    },
+    raw: false,
+  });
+  // console.log(post);
+  if (post) {
+    post.likeCount += number;
+    await post.save();
+    return true;
+  }
+  return true;
+};
 export default {
   handleGetPostService,
   handleAddPostService,

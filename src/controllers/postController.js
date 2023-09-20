@@ -31,7 +31,6 @@ const handleAddPost = async (req, res) => {
     let reg = await PostService.handleAddPostService(userId,data);
     if (reg) {
 
-      console.log(reg);
       return res.status(200).json({
         errCode: 0,
         message: "Add Post Success",

@@ -310,6 +310,36 @@ const checkRoleService = async (data) => {
     return false;
   }
 };
+const handleGetFriendService = async (id) =>{
+  return new Promise(async (resolve, reject) => {
+    try {
+      let friend = await db.Friend.findAll({
+        include: [
+          {
+            model: db.User,
+            attributes: ["idUser","userName","avatar"],
+          },
+        ],
+        attributes: [],
+        where: {
+          friend_1 : 4,
+          status : 1,
+        },
+        raw: true,
+        nest : true
+      });
+      if (friend) {
+        resolve(friend);
+      } else {
+        resolve(false);
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+
 export default {
   createUserService,
   updateUserService,
@@ -320,4 +350,5 @@ export default {
   getDataUserService,
   handleSearchService,
   checkRoleService,
+  handleGetFriendService,
 };
