@@ -58,7 +58,7 @@ const handleAddPostService = (idWhoPost, data) => {
         const storageImg = await cloudinary.uploader.upload(data.image, {
           folder: "social_data",
         });
-        console.log(storageImg);
+        // console.log(storageImg);
         await db.Post.create({
           idWhoPost: idWhoPost,
           content: data.content,

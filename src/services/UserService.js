@@ -250,7 +250,7 @@ const handlelUserLoginService = (email, password) => {
         userData.errCode = 1;
         userData.errMessage = `Your email is not a member of us ! Please register first`;
       }
-      console.log(userData);
+      // console.log(userData);
       resolve(userData);
     } catch (error) {
       reject(error);

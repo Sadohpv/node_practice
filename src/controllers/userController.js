@@ -80,7 +80,7 @@ const handleEditUser = async (req, res) => {
 
   let reg = await UserService.updateUserService(attribute, data, userId);
 
-  console.log(reg);
+  // console.log(reg);
 
   return res.status(200).json({
     message: "Edit User",
