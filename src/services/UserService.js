@@ -317,7 +317,7 @@ const handleGetFriendService = async (id) =>{
         include: [
           {
             model: db.User,
-            attributes: ["idUser","userName","avatar"],
+            attributes: ["idUser","userName","avatar","address","firstName","lastName"],
           },
         ],
         attributes: [],
