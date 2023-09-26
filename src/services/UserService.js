@@ -237,7 +237,6 @@ const handlelUserLoginService = (email, password) => {
             delete user.passWord;
             userData.user = user;
             userData.roles = await checkRoleService(user.level_id);
-
           } else {
             userData.errCode = 3;
             userData.errMessage = "Wrong password";
@@ -312,24 +311,59 @@ const checkRoleService = async (data) => {
 };
 const handleGetFriendService = async (id) =>{
   return new Promise(async (resolve, reject) => {
+    
     try {
-      let friend = await db.Friend.findAll({
+   
+      let friend1 = await db.Friend.findAll({
         include: [
           {
             model: db.User,
             attributes: ["idUser","userName","avatar","address","firstName","lastName"],
+            as: "friendAsked",
+
           },
         ],
         attributes: [],
         where: {
-          friend_1 : 4,
+          friend_2 : id,
           status : 1,
         },
         raw: true,
         nest : true
       });
-      if (friend) {
-        resolve(friend);
+      let friend2 = await db.Friend.findAll({
+        include: [
+          {
+            model: db.User,
+            attributes: ["idUser","userName","avatar","address","firstName","lastName"],
+            as: "friendAsking",
+
+          },
+        ],
+        attributes: [],
+        where: {
+          friend_1 : id,
+          status : 1,
+        },
+        raw: true,
+        nest : true
+      });
+      let result =[];
+      if(friend1){
+        // console.log("Herre")
+        friend1.map(item=>{
+         result.push(item.friendAsked);
+        })
+      }
+      if(friend2){
+        // console.log("Herre")
+        friend2.map(item=>{
+         result.push(item.friendAsking);
+        })
+      }
+      // console.log(result);
+      if (result) {
+        resolve(result);
       } else {
         resolve(false);
       }

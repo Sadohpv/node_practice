@@ -14,10 +14,10 @@ module.exports = (sequelize, DataTypes) => {
       User.belongsTo(models.Level,{
         foreignKey: 'level_id',
       });
-      User.hasOne(models.Friend,{
+      User.hasMany(models.Friend,{
         foreignKey: 'friend_1',
       });
-      User.hasOne(models.Friend,{
+      User.hasMany(models.Friend,{
         foreignKey: 'friend_2',
       });
     }

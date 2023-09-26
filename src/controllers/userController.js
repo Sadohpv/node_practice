@@ -120,6 +120,7 @@ const handleGetAccount = async (req, res) => {
 };
 const handleGetAllFriend = async (req, res) => {
   let id = req.params.id;
+  // console.log(id);
   let reg = await UserService.handleGetFriendService(id);
   if (reg) {
     return res.status(200).json({
