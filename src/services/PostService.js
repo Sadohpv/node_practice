@@ -216,6 +216,44 @@ const handleLikeNumber = async (id, number) => {
   }
   return true;
 };
+const handleGetOwnerPostService = async (data)=>{
+  return new Promise(async (resolve, reject) => {
+    try {
+      let post = await db.Post.findAll({
+        include: [
+          {
+            model: db.User,
+            attributes: ["idUser", "userName", "avatar"],
+          },
+        ],
+        where:{
+          idWhoPost : data.userPage,
+        },
+        raw: true,
+        nest: true, // group include model into 1 object
+      });
+
+      // const result = post.map(row => {
+      //   row.imgPost = "File IMG";
+      //   // console.log(row["imgPost"]);
+
+      // })
+      const liked = await handleCheckLikeService(data.owner);
+      console.log(liked);
+      post.map((p) => {
+        if (liked.includes(p.idPost)) {
+          p.userLiked = true;
+        } else {
+          p.userLiked = false;
+        }
+      });
+      // console.log(post);
+      resolve(post);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
 export default {
   handleGetPostService,
   handleAddPostService,
@@ -223,4 +261,5 @@ export default {
   handleDeletePostService,
   handleLikedPostService,
   handleCheckLikeService,
+  handleGetOwnerPostService
 };

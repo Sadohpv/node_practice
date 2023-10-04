@@ -126,11 +126,30 @@ const handleCheckLike =  async (req, res)=>{
     
   });
 }
+const handleGetOwnerPost = async (req,res)=>{
+  let data = req.body;
+  console.log(data);
+  if(data){
+    let reg = await PostService.handleGetOwnerPostService(data);
+    return res.status(200).json({
+      errCode: 0,
+      message: "Post Owner",
+      reg,
+    });
+  }
+
+  return res.status(200).json({
+    errCode: 5,
+    message: "Something Wrong !",
+    
+  });
+};
 export default {
   handleGetPost,
   handleAddPost,
   handleUpdatePost,
   handleDeletePost,
   handleLikedPost,
-  handleCheckLike
+  handleCheckLike,
+  handleGetOwnerPost
 };
