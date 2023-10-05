@@ -12,6 +12,9 @@ const handleGetPostService = (idUser) => {
             attributes: ["idUser", "userName", "avatar"],
           },
         ],
+        where: {
+          privatePost: 0,
+        },
         raw: true,
         nest: true, // group include model into 1 object
       });
@@ -163,7 +166,7 @@ const handleLikedPostService = (data) => {
             message: "Like",
           });
         }
-      }else if (likedPost === null) {
+      } else if (likedPost === null) {
         if (data.liked === true) {
           await db.LikePost.create({
             idPostLiked: data.idPost,
@@ -216,22 +219,41 @@ const handleLikeNumber = async (id, number) => {
   }
   return true;
 };
-const handleGetOwnerPostService = async (data)=>{
+const handleGetOwnerPostService = async (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let post = await db.Post.findAll({
-        include: [
-          {
-            model: db.User,
-            attributes: ["idUser", "userName", "avatar"],
+      let post = {};
+      if (+data.userPage === data.owner) {
+        // console.log("Authentic");
+        post = await db.Post.findAll({
+          include: [
+            {
+              model: db.User,
+              attributes: ["idUser", "userName", "avatar"],
+            },
+          ],
+          where: {
+            idWhoPost: data.userPage,
           },
-        ],
-        where:{
-          idWhoPost : data.userPage,
-        },
-        raw: true,
-        nest: true, // group include model into 1 object
-      });
+          raw: true,
+          nest: true, // group include model into 1 object
+        });
+      } else {
+        post = await db.Post.findAll({
+          include: [
+            {
+              model: db.User,
+              attributes: ["idUser", "userName", "avatar"],
+            },
+          ],
+          where: {
+            idWhoPost: data.userPage,
+          },
+          where: { privatePost: 0 },
+          raw: true,
+          nest: true, // group include model into 1 object
+        });
+      }
 
       // const result = post.map(row => {
       //   row.imgPost = "File IMG";
@@ -239,7 +261,7 @@ const handleGetOwnerPostService = async (data)=>{
 
       // })
       const liked = await handleCheckLikeService(data.owner);
-      console.log(liked);
+      // console.log(liked);
       post.map((p) => {
         if (liked.includes(p.idPost)) {
           p.userLiked = true;
@@ -253,7 +275,7 @@ const handleGetOwnerPostService = async (data)=>{
       reject(error);
     }
   });
-}
+};
 export default {
   handleGetPostService,
   handleAddPostService,
@@ -261,5 +283,5 @@ export default {
   handleDeletePostService,
   handleLikedPostService,
   handleCheckLikeService,
-  handleGetOwnerPostService
+  handleGetOwnerPostService,
 };

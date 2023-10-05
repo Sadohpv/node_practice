@@ -3,7 +3,6 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("Post", {
-   
       idPost: {
         allowNull: false,
         autoIncrement: true,
@@ -27,6 +26,9 @@ module.exports = {
       },
       shareIdPost: {
         type: Sequelize.INTEGER,
+      },
+      privatePost: {
+        type: Sequelize.BOOLEAN,
       },
       createdAt: {
         allowNull: false,

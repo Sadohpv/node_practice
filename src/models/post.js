@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     likeCount: DataTypes.INTEGER,
     shareCount: DataTypes.INTEGER,
     shareIdPost: DataTypes.INTEGER,  
-
+    privatePost:  DataTypes.BOOLEAN,  
   }, {
     sequelize,
     modelName: 'Post',

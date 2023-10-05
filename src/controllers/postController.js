@@ -128,7 +128,7 @@ const handleCheckLike =  async (req, res)=>{
 }
 const handleGetOwnerPost = async (req,res)=>{
   let data = req.body;
-  console.log(data);
+  // console.log(data);
   if(data){
     let reg = await PostService.handleGetOwnerPostService(data);
     return res.status(200).json({
