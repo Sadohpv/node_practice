@@ -43,12 +43,21 @@ const handleGetDataUser = async (req, res) => {
   let id = req.params.id;
 
   let reg = await UserService.getDataUserService(id);
-
-  return res.status(200).json({
-    errCode: 0,
-    errCodeMessage: "Check read data user",
-    reg,
-  });
+  // console.log(reg);
+  if(reg){
+    return res.status(200).json({
+      errCode: 0,
+      errCodeMessage: "Check read data user",
+      reg,
+    });
+  }else{
+    return res.status(400).json({
+      errCode: 1,
+      errCodeMessage: "Bad request",
+     
+    });
+  }
+  
 };
 
 const handleCreateUser = async (req, res) => {

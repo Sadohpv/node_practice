@@ -149,8 +149,14 @@ const getDataUserService = (id) => {
         },
         where: { idUser: id },
         raw: true,
+        nest: true,
       });
+
       if (user) {
+        
+
+        // user.avatar = avatar;
+
         resolve(user);
       } else {
         resolve();
@@ -160,6 +166,7 @@ const getDataUserService = (id) => {
     }
   });
 };
+
 
 const hashUserPassword = (password) => {
   return new Promise(async (resolve, reject) => {
@@ -206,14 +213,6 @@ const checkUserEmail = (UserEmail) => {
   });
 };
 
-const checkPassword = (UserPassword) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-    } catch (error) {
-      reject(error);
-    }
-  });
-};
 const handlelUserLoginService = (email, password) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -309,70 +308,79 @@ const checkRoleService = async (data) => {
     return false;
   }
 };
-const handleGetFriendService = async (id) =>{
+const handleGetFriendService = async (id) => {
   return new Promise(async (resolve, reject) => {
-    
     try {
-   
       let friend1 = await db.Friend.findAll({
         include: [
           {
             model: db.User,
-            attributes: ["idUser","userName","avatar","address","firstName","lastName"],
+            attributes: [
+              "idUser",
+              "userName",
+              "avatar",
+              "address",
+              "firstName",
+              "lastName",
+            ],
             as: "friendAsked",
-
           },
         ],
         attributes: [],
         where: {
-          friend_2 : id,
-          status : 1,
+          friend_2: id,
+          status: 1,
         },
         raw: true,
-        nest : true
+        nest: true,
       });
       let friend2 = await db.Friend.findAll({
         include: [
           {
             model: db.User,
-            attributes: ["idUser","userName","avatar","address","firstName","lastName"],
+            attributes: [
+              "idUser",
+              "userName",
+              "avatar",
+              "address",
+              "firstName",
+              "lastName",
+            ],
             as: "friendAsking",
-
           },
         ],
         attributes: [],
         where: {
-          friend_1 : id,
-          status : 1,
+          friend_1: id,
+          status: 1,
         },
         raw: true,
-        nest : true
+        nest: true,
       });
-      let result =[];
-      if(friend1){
+      let result = [];
+      if (friend1) {
         // console.log("Herre")
-        friend1.map(item=>{
-         result.push(item.friendAsked);
-        })
+        friend1.map((item) => {
+          result.push(item.friendAsked);
+        });
       }
-      if(friend2){
+      if (friend2) {
         // console.log("Herre")
-        friend2.map(item=>{
-         result.push(item.friendAsking);
-        })
+        friend2.map((item) => {
+          result.push(item.friendAsking);
+        });
       }
-      // console.log(result);
-      if (result) {
+      if(result){
         resolve(result);
-      } else {
-        resolve(false);
+      }
+      else {
+         resolve(false);
       }
     } catch (error) {
       reject(error);
     }
   });
-}
-
+};
 
 export default {
   createUserService,

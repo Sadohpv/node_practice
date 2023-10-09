@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Friend,{
         foreignKey: 'friend_2',
       });
+     
     }
   }
   User.init({
