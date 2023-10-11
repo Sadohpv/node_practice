@@ -21,6 +21,9 @@ module.exports = {
       likeCount: {
         type: Sequelize.INTEGER,
       },
+      commentCount: {
+        type: Sequelize.INTEGER,
+      },
       shareCount: {
         type: Sequelize.INTEGER,
       },

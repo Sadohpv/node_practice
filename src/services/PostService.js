@@ -239,6 +239,8 @@ const handleGetOwnerPostService = async (data) => {
           nest: true, // group include model into 1 object
         });
       } else {
+        console.log(data.userPage);
+        
         post = await db.Post.findAll({
           include: [
             {
@@ -248,8 +250,9 @@ const handleGetOwnerPostService = async (data) => {
           ],
           where: {
             idWhoPost: data.userPage,
+             privatePost: 0 
           },
-          where: { privatePost: 0 },
+          
           raw: true,
           nest: true, // group include model into 1 object
         });
