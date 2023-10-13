@@ -239,8 +239,8 @@ const handleGetOwnerPostService = async (data) => {
           nest: true, // group include model into 1 object
         });
       } else {
-        console.log(data.userPage);
-        
+        // console.log(data.userPage);
+
         post = await db.Post.findAll({
           include: [
             {
@@ -257,13 +257,7 @@ const handleGetOwnerPostService = async (data) => {
           nest: true, // group include model into 1 object
         });
       }
-
-      // const result = post.map(row => {
-      //   row.imgPost = "File IMG";
-      //   // console.log(row["imgPost"]);
-
-      // })
-      const liked = await handleCheckLikeService(data.owner);
+    const liked = await handleCheckLikeService(data.owner);
       // console.log(liked);
       post.map((p) => {
         if (liked.includes(p.idPost)) {
