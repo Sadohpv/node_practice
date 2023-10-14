@@ -14,4 +14,6 @@ router.delete('/deletePost',postController.handleDeletePost);
 router.put('/likedPost',postController.handleLikedPost);
 // router.get('/likedPost/:check',postController.handleCheckLike);
 router.post('/ownerPost',postController.handleGetOwnerPost);
+router.post('/onePost',postController.handleGetOnePost);
+
 module.exports = router;

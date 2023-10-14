@@ -250,14 +250,14 @@ const handleGetOwnerPostService = async (data) => {
           ],
           where: {
             idWhoPost: data.userPage,
-             privatePost: 0 
+            privatePost: 0,
           },
-          
+
           raw: true,
           nest: true, // group include model into 1 object
         });
       }
-    const liked = await handleCheckLikeService(data.owner);
+      const liked = await handleCheckLikeService(data.owner);
       // console.log(liked);
       post.map((p) => {
         if (liked.includes(p.idPost)) {
@@ -273,6 +273,49 @@ const handleGetOwnerPostService = async (data) => {
     }
   });
 };
+const handleGetOnePostService = (idPost, idUser) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let post = await db.Post.findOne({
+        include: [
+          {
+            model: db.User,
+            attributes: ["idUser", "userName", "avatar"],
+          },
+        ],
+        where: {
+          privatePost: 0,
+        },
+        raw: true,
+        nest: true, // group include model into 1 object
+      });
+
+      // const result = post.map(row => {
+      //   row.imgPost = "File IMG";
+      //   // console.log(row["imgPost"]);
+
+      // })
+      // console.log(post);
+      if (post) {
+        const liked = await handleCheckLikeService(idUser);
+
+        if (liked.includes(post.idPost)) {
+          post.userLiked = true;
+        } else {
+          post.userLiked = false;
+        }
+
+        resolve(post);
+      } else {
+        resolve({ EC: 401 });
+      }
+
+      // console.log(post);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 export default {
   handleGetPostService,
   handleAddPostService,
@@ -281,4 +324,5 @@ export default {
   handleLikedPostService,
   handleCheckLikeService,
   handleGetOwnerPostService,
+  handleGetOnePostService,
 };

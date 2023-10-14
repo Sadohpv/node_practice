@@ -144,6 +144,24 @@ const handleGetOwnerPost = async (req,res)=>{
     
   });
 };
+const handleGetOnePost = async (req,res)=>{
+  let data = req.body;
+  // console.log(data);
+  if(data){
+    let reg = await PostService.handleGetOnePostService(data.idPost,data.owner);
+    return res.status(200).json({
+      errCode: 0,
+      message: "Post One",
+      reg,
+    });
+  }
+
+  return res.status(200).json({
+    errCode: 5,
+    message: "Something Wrong !",
+    
+  });
+}
 export default {
   handleGetPost,
   handleAddPost,
@@ -151,5 +169,6 @@ export default {
   handleDeletePost,
   handleLikedPost,
   handleCheckLike,
-  handleGetOwnerPost
+  handleGetOwnerPost,
+  handleGetOnePost,
 };
