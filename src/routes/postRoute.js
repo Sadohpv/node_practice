@@ -15,5 +15,6 @@ router.put('/likedPost',postController.handleLikedPost);
 // router.get('/likedPost/:check',postController.handleCheckLike);
 router.post('/ownerPost',postController.handleGetOwnerPost);
 router.post('/onePost',postController.handleGetOnePost);
+router.get('/comment/:idPost',postController.handleGetComment);
 
 module.exports = router;

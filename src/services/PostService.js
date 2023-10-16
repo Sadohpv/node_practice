@@ -285,6 +285,7 @@ const handleGetOnePostService = (idPost, idUser) => {
         ],
         where: {
           privatePost: 0,
+          idPost : idPost,
         },
         raw: true,
         nest: true, // group include model into 1 object
@@ -316,6 +317,29 @@ const handleGetOnePostService = (idPost, idUser) => {
     }
   });
 };
+const handleGetCommentService = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let comment = await db.Comment.findAll({
+        include:[{
+          attributes : ["idUser","avatar","userName"],
+          model: db.User,
+        }],
+        where: {
+          idPostComment : id,
+        },
+        raw: true,
+        nest:true,
+      });
+      
+      if(comment){
+        resolve(comment);
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 export default {
   handleGetPostService,
   handleAddPostService,
@@ -325,4 +349,5 @@ export default {
   handleCheckLikeService,
   handleGetOwnerPostService,
   handleGetOnePostService,
+  handleGetCommentService
 };

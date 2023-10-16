@@ -162,6 +162,22 @@ const handleGetOnePost = async (req,res)=>{
     
   });
 }
+const handleGetComment = async (req,res)=>{
+  let data=req.params;
+  if(data){
+    let reg = await PostService.handleGetCommentService(data.idPost);
+    return res.status(200).json({
+      errCode: 0,
+      message: "Get Comment !",
+      reg,
+    });
+  }
+  return res.status(200).json({
+    errCode: 5,
+    message: "Get Comment !",
+    
+  });
+}
 export default {
   handleGetPost,
   handleAddPost,
@@ -171,4 +187,5 @@ export default {
   handleCheckLike,
   handleGetOwnerPost,
   handleGetOnePost,
+  handleGetComment,
 };
