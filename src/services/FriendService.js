@@ -262,10 +262,40 @@ const handleCancelRequestService = async (data) => {
   });
 };
 
+const handleIsFriendService = async (userPage,owner)=>{
+  return new Promise(async (resolve, reject) => {
+    try {
+      let relationship = await db.Friend.findOne({
+        attributes: ["id","friend_1", "friend_2", "status"],
+        where: {
+          [Op.or]: [
+            { friend_1: userPage, friend_2: owner },
+            { friend_1: owner, friend_2: userPage },
+          ]
+        },
+       raw : true,
 
+      });
+      
+      if(relationship){
+       
+
+        resolve(relationship);
+      }else{
+        resolve({
+          EC : 1,
+          EM : "NOT FOUND RELATIONSHIP !",
+        });
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 export default {
   handleGetMutualFriendService,
   handleUnfriendService,
   handleAddFriendService,
-  handleCancelRequestService
+  handleCancelRequestService,handleIsFriendService
+
 };

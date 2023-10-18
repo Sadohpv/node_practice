@@ -12,6 +12,6 @@ router.post('/mutual',friendController.handleGetMutualFriend);
 router.post('/unfriend',friendController.handleUnfriend);
 router.post('/addFriend',friendController.handleAddFriend);
 router.post('/cancelAddFriend',friendController.handleCancelRequest);
-
+router.post('/isFriend',friendController.handleIsFriend);
 
 module.exports = router;
