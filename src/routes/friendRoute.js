@@ -13,5 +13,8 @@ router.post('/unfriend',friendController.handleUnfriend);
 router.post('/addFriend',friendController.handleAddFriend);
 router.post('/cancelAddFriend',friendController.handleCancelRequest);
 router.post('/isFriend',friendController.handleIsFriend);
+router.post('/addFriendResponse',friendController.handleAddFriendResponse);
+router.post('/addFriendAnswer',friendController.handleAddFriendAnswer);
+router.post('/addFriendRequest',friendController.handleAddFriendRequest);
 
 module.exports = router;

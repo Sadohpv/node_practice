@@ -84,11 +84,14 @@ const handleCancelRequest = async (req, res) => {
     console.log(e);
   }
 };
-const handleIsFriend =  async (req, res) => {
+const handleIsFriend = async (req, res) => {
   let data = req.body;
   // console.log(data);
   try {
-    let reg = await FriendService.handleIsFriendService(data.userPage,data.owner);
+    let reg = await FriendService.handleIsFriendService(
+      data.userPage,
+      data.owner
+    );
 
     if (reg) {
       return res.status(200).json({
@@ -105,10 +108,96 @@ const handleIsFriend =  async (req, res) => {
     console.log(e);
   }
 };
+const handleAddFriendResponse = async (req, res) => {
+  let data = req.body;
+  if (data && data.idUser) {
+    try {
+      let reg = await FriendService.handleAddFriendResponseService(data.idUser);
+
+      if (reg) {
+        return res.status(200).json({
+          message: "Check Friend Response !!",
+          reg,
+        });
+      } else {
+        return res.status(400).json({
+          errCode: 1,
+          message: "Something wrong happen !!",
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    return res.status(400).json({
+      errCode: 1,
+      message: "Something wrong happen !!",
+    });
+  }
+};
+const handleAddFriendAnswer = async (req, res) => {
+  let data = req.body;
+  // console.log(data);
+  if (data) {
+    try {
+      let reg = await FriendService.handleAddFriendAnswerService(data);
+
+      if (reg) {
+        return res.status(200).json({
+          message: "Check Friend Answer !!",
+          reg,
+        });
+      } else {
+        return res.status(400).json({
+          errCode: 1,
+          message: "Something wrong happen !!",
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    return res.status(400).json({
+      errCode: 1,
+      message: "Something wrong happen !!",
+    });
+  }
+};
+const handleAddFriendRequest = async (req, res) => {
+  let data = req.body;
+  if (data && data.idUser) {
+    try {
+      let reg = await FriendService.handleAddFriendRequestService(data.idUser);
+
+      if (reg) {
+        return res.status(200).json({
+          message: "Check Friend Answer !!",
+          reg,
+        });
+      } else {
+        return res.status(400).json({
+          errCode: 1,
+          message: "Something wrong happen !!",
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    return res.status(400).json({
+      errCode: 1,
+      message: "Something wrong happen !!",
+    });
+  }
+};
+
 module.exports = {
   handleGetMutualFriend,
   handleUnfriend,
   handleAddFriend,
   handleCancelRequest,
-  handleIsFriend
+  handleIsFriend,
+  handleAddFriendResponse,
+  handleAddFriendAnswer,
+  handleAddFriendRequest,
 };

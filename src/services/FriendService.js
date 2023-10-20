@@ -163,7 +163,7 @@ const handleUnfriendService = async (data) => {
   return new Promise(async (resolve, reject) => {
     try {
       let relationship = await db.Friend.findOne({
-        attributes: ["id","friend_1", "friend_2", "status"],
+        attributes: ["id", "friend_1", "friend_2", "status"],
         where: {
           [Op.or]: [
             { friend_1: data.owner, friend_2: data.friend },
@@ -171,20 +171,20 @@ const handleUnfriendService = async (data) => {
           ],
           status: 1,
         },
-       raw : false,
+        raw: false,
       });
-      if(relationship){
+      if (relationship) {
         await relationship.destroy();
         // await relationship.save();
 
         resolve({
-          EC : 0,
-          EM : "UNFRIEND SUCCESSFULLY !",
+          EC: 0,
+          EM: "UNFRIEND SUCCESSFULLY !",
         });
-      }else{
+      } else {
         resolve({
-          EC : 1,
-          EM : "NOT FOUND RELATIONSHIP !",
+          EC: 1,
+          EM: "NOT FOUND RELATIONSHIP !",
         });
       }
     } catch (error) {
@@ -192,68 +192,34 @@ const handleUnfriendService = async (data) => {
     }
   });
 };
-const handleAddFriendService = async(data)=>{
+const handleAddFriendService = async (data) => {
   return new Promise(async (resolve, reject) => {
     try {
       let relationship = await db.Friend.findOne({
-        attributes: ["id","friend_1", "friend_2", "status"],
+        attributes: ["id", "friend_1", "friend_2", "status"],
         where: {
           [Op.or]: [
             { friend_1: data.asked, friend_2: data.asking },
             { friend_1: data.asking, friend_2: data.asked },
           ],
         },
-       raw : false,
+        raw: false,
       });
-      if(relationship){
-
-
+      if (relationship) {
         resolve({
-          EC : 1,
-          EM : "WRONG ADD FRIEND REQUEST !",
+          EC: 1,
+          EM: "WRONG ADD FRIEND REQUEST !",
         });
-      }else{
+      } else {
         await db.Friend.create({
-        friend_1: data.asked,
-          friend_2: data.asking,
-          
-          status: 2
-        });
-        resolve({
-          EC : 0,
-          EM : "SEND ADD FRIEND REQUEST !",
-        })
-      }
-    } catch (error) {
-      reject(error);
-    }
-  });
-}
-
-const handleCancelRequestService = async (data) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let relationship = await db.Friend.findOne({
-        attributes: ["id","friend_1", "friend_2", "status"],
-        where: {
           friend_1: data.asked,
           friend_2: data.asking,
-          status: 2,
-        },
-       raw : false,
-      });
-      if(relationship){
-        await relationship.destroy();
-        // await relationship.save();
 
-        resolve({
-          EC : 0,
-          EM : "CANCEL REQUEST SUCCESSFULLY !",
+          status: 2,
         });
-      }else{
         resolve({
-          EC : 1,
-          EM : "NOT FOUND RELATIONSHIP !",
+          EC: 0,
+          EM: "SEND ADD FRIEND REQUEST !",
         });
       }
     } catch (error) {
@@ -262,29 +228,177 @@ const handleCancelRequestService = async (data) => {
   });
 };
 
-const handleIsFriendService = async (userPage,owner)=>{
+const handleCancelRequestService = async (data) => {
   return new Promise(async (resolve, reject) => {
     try {
       let relationship = await db.Friend.findOne({
-        attributes: ["id","friend_1", "friend_2", "status"],
+        attributes: ["id", "friend_1", "friend_2", "status"],
+        where: {
+          friend_1: data.asked,
+          friend_2: data.asking,
+          status: 2,
+        },
+        raw: false,
+      });
+      if (relationship) {
+        await relationship.destroy();
+        // await relationship.save();
+
+        resolve({
+          EC: 0,
+          EM: "CANCEL REQUEST SUCCESSFULLY !",
+        });
+      } else {
+        resolve({
+          EC: 1,
+          EM: "NOT FOUND RELATIONSHIP !",
+        });
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const handleIsFriendService = async (userPage, owner) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let relationship = await db.Friend.findOne({
+        attributes: ["id", "friend_1", "friend_2", "status"],
         where: {
           [Op.or]: [
             { friend_1: userPage, friend_2: owner },
             { friend_1: owner, friend_2: userPage },
-          ]
+          ],
         },
-       raw : true,
-
+        raw: true,
       });
-      
-      if(relationship){
-       
 
+      if (relationship) {
         resolve(relationship);
-      }else{
+      } else {
         resolve({
-          EC : 1,
-          EM : "NOT FOUND RELATIONSHIP !",
+          EC: 1,
+          EM: "NOT FOUND RELATIONSHIP !",
+        });
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const handleAddFriendResponseService = async (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let relationship = await db.Friend.findAll({
+        include:{
+          model: db.User,
+          attributes: [
+            "idUser",
+            "userName",
+            "avatar",
+            "address",
+            "firstName",
+            "lastName",
+          ],
+          as: "friendAsking",
+        },
+        attributes: ["id", "friend_1", "friend_2", "status"],
+        where: {
+          friend_1 :id,
+          status: 2,
+        },
+        raw: true,
+        nest:true,
+      });
+
+      if (relationship) {
+        resolve(relationship);
+      } else {
+        resolve({
+          EC: 1,
+          EM: "NOT FOUND RELATIONSHIP !",
+        });
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const handleAddFriendAnswerService = async (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let relationship = await db.Friend.findOne({
+      
+        attributes: ["id", "friend_1", "friend_2", "status"],
+        where: {
+          friend_1 :data.friend_1,
+          friend_2 : data.friend_2,
+          status: 2,
+        },
+        raw: false,
+       
+      });
+
+      if (relationship) {
+        if(data.answer === true){
+          // console.log("Here");
+          relationship.status = 1;
+          await relationship.save();
+
+           resolve("Accept Add Friend");
+
+        }else{
+          await relationship.destroy();
+          resolve("Deny Add Friend")
+        }
+
+
+      } else {
+        resolve({
+          EC: 1,
+          EM: "NOT FOUND RELATIONSHIP !",
+        });
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const handleAddFriendRequestService = (id)=>{
+  return new Promise(async (resolve, reject) => {
+    try {
+      let relationship = await db.Friend.findAll({
+        include:{
+          model: db.User,
+          attributes: [
+            "idUser",
+            "userName",
+            "avatar",
+            "address",
+            "firstName",
+            "lastName",
+          ],
+          as: "friendAsked",
+        },
+        attributes: ["id", "friend_1", "friend_2", "status"],
+        where: {
+          friend_2 :id,
+          status: 2,
+        },
+        raw: true,
+        nest:true,
+      });
+
+      if (relationship) {
+        resolve(relationship);
+      } else {
+        resolve({
+          EC: 1,
+          EM: "NOT FOUND RELATIONSHIP !",
         });
       }
     } catch (error) {
@@ -296,6 +410,9 @@ export default {
   handleGetMutualFriendService,
   handleUnfriendService,
   handleAddFriendService,
-  handleCancelRequestService,handleIsFriendService
-
+  handleCancelRequestService,
+  handleIsFriendService,
+  handleAddFriendResponseService,
+  handleAddFriendAnswerService,
+  handleAddFriendRequestService
 };
