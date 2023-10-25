@@ -285,7 +285,7 @@ const handleGetOnePostService = (idPost, idUser) => {
         ],
         where: {
           privatePost: 0,
-          idPost : idPost,
+          idPost: idPost,
         },
         raw: true,
         nest: true, // group include model into 1 object
@@ -321,19 +321,52 @@ const handleGetCommentService = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
       let comment = await db.Comment.findAll({
-        include:[{
-          attributes : ["idUser","avatar","userName"],
-          model: db.User,
-        }],
+        include: [
+          {
+            attributes: ["idUser", "avatar", "userName"],
+            model: db.User,
+          },
+        ],
         where: {
-          idPostComment : id,
+          idPostComment: id,
         },
         raw: true,
-        nest:true,
+        nest: true,
+        order: [["createdAt", "DESC"]],
       });
-      
-      if(comment){
+
+      if (comment) {
         resolve(comment);
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+const handlePushCommentService = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let post = await db.Post.findOne({
+        where: {
+          idPost: data.idPostComment,
+        },
+        attributes: ["idPost", "commentCount"],
+        raw: false,
+      });
+      if (post) {
+        post.commentCount += 1;
+        await post.save();
+
+        await db.Comment.create({
+          idWhoComment: data.idWhoComment,
+          idPostComment: data.idPostComment,
+          content: data.content,
+
+          likeComment: 0,
+        });
+        resolve(true);
+      } else {
+        resolve(false);
       }
     } catch (error) {
       reject(error);
@@ -349,5 +382,6 @@ export default {
   handleCheckLikeService,
   handleGetOwnerPostService,
   handleGetOnePostService,
-  handleGetCommentService
+  handleGetCommentService,
+  handlePushCommentService,
 };

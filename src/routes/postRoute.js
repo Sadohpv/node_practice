@@ -16,5 +16,6 @@ router.put('/likedPost',postController.handleLikedPost);
 router.post('/ownerPost',postController.handleGetOwnerPost);
 router.post('/onePost',postController.handleGetOnePost);
 router.get('/comment/:idPost',postController.handleGetComment);
+router.post('/pushComment',postController.handlePushComment);
 
 module.exports = router;

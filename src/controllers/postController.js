@@ -177,7 +177,44 @@ const handleGetComment = async (req,res)=>{
     message: "Get Comment !",
     
   });
-}
+};
+const handlePushComment = async (req,res)=>{
+  let data=req.body;
+  if(data){
+   
+    if(data.idWhoComment !== undefined & data.idPostComment !== undefined & data.content !== undefined){
+      let reg = await PostService.handlePushCommentService(data);
+
+      if(reg === true){
+        return res.status(200).json({
+          errCode: 0,
+          message: "Push Comment !",
+         
+        });
+      }else{
+        return res.status(400).json({
+          errCode: 2,
+          message: "Push Comment Fail !",
+        
+        });
+      }
+
+      
+    }else{
+      return res.status(400).json({
+        errCode: 1,
+        message: "Missing Data !",
+     
+      });
+    }
+  }else{
+    return res.status(400).json({
+      errCode: 5,
+      message: "Something Wrong !",
+      
+    });
+  }
+};
 export default {
   handleGetPost,
   handleAddPost,
@@ -188,4 +225,5 @@ export default {
   handleGetOwnerPost,
   handleGetOnePost,
   handleGetComment,
+  handlePushComment
 };
