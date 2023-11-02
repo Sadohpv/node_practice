@@ -190,7 +190,34 @@ const handleAddFriendRequest = async (req, res) => {
     });
   }
 };
+const handleNumberAddFriendResponse = async(req,res)=>{
+  let data = req.body;
+  // console.log(data);
+  if (data && data.idUser) {
+    try {
+      let reg = await FriendService.handleGetNumberAddFriendRequestService(data.idUser);
 
+      if (reg!== null && reg !== undefined) {
+        return res.status(200).json({
+          message: "Check Friend Answer !!",
+          reg,
+        });
+      } else {
+        return res.status(400).json({
+          errCode: 1,
+          message: "Something wrong happen !!",
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  } else {
+    return res.status(400).json({
+      errCode: 1,
+      message: "Something wrong happen !!",
+    });
+  }
+};
 module.exports = {
   handleGetMutualFriend,
   handleUnfriend,
@@ -200,4 +227,5 @@ module.exports = {
   handleAddFriendResponse,
   handleAddFriendAnswer,
   handleAddFriendRequest,
+  handleNumberAddFriendResponse
 };

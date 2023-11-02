@@ -406,6 +406,46 @@ const handleAddFriendRequestService = (id)=>{
     }
   });
 };
+const handleGetNumberAddFriendRequestService = async (id)=>{
+  return new Promise(async (resolve, reject) => {
+    try {
+      let relationship = await db.Friend.findAll({
+        include:{
+          model: db.User,
+          attributes: [
+            "idUser",
+            "userName",
+            "avatar",
+            "address",
+            "firstName",
+            "lastName",
+          ],
+          as: "friendAsking",
+        },
+        attributes: ["id", "friend_1", "friend_2", "status"],
+        where: {
+          friend_1 :id,
+          status: 2,
+        },
+        raw: true,
+        nest:true,
+      });
+
+      if (relationship) {
+        const number = relationship.length;
+        // console.log(number)
+        resolve(number);
+      } else {
+        resolve({
+          EC: 1,
+          EM: "NOT FOUND RELATIONSHIP !",
+        });
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
 export default {
   handleGetMutualFriendService,
   handleUnfriendService,
@@ -414,5 +454,6 @@ export default {
   handleIsFriendService,
   handleAddFriendResponseService,
   handleAddFriendAnswerService,
-  handleAddFriendRequestService
+  handleAddFriendRequestService,
+  handleGetNumberAddFriendRequestService
 };
