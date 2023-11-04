@@ -3,6 +3,7 @@ import homeController from "../controllers/homeController";
 import userRouter from './userRoute'
 import postRouter from './postRoute'
 import friendRouter from './friendRoute'
+import commentRouter from './commentRoute'
 const router = express.Router();
 
 const initWebRoutes = (app) => {
@@ -18,6 +19,7 @@ const initWebRoutes = (app) => {
     app.use('/api',userRouter);
     app.use('/post',postRouter);
     app.use('/friend',friendRouter);
+    app.use('/comment',commentRouter);
 
 
     return app.use('/', router);
