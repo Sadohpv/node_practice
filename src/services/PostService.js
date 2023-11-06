@@ -2,8 +2,11 @@ import db from "../models/index";
 import { where, Op } from "sequelize";
 import { cloudinary } from "../utils/cloudinary";
 
-const handleGetPostService = (idUser) => {
+const handleGetPostService = (idUser,page) => {
   return new Promise(async (resolve, reject) => {
+    const num = (page == 1 ? 0 : (page * 4 - 4)); 
+   
+
     try {
       let post = await db.Post.findAll({
         include: [
@@ -17,6 +20,8 @@ const handleGetPostService = (idUser) => {
         },
         raw: true,
         nest: true, // group include model into 1 object
+        offset : num, // skip num records
+        limit : 4, // get 2 records after skip 
       });
 
       // const result = post.map(row => {
@@ -317,7 +322,8 @@ const handleGetOnePostService = (idPost, idUser) => {
     }
   });
 };
-const handleGetCommentService = (id) => {
+const handleGetCommentService = (id,page) => {
+  const num = (page == 1 ? 0 : (page * 6 - 6)); 
   return new Promise(async (resolve, reject) => {
     try {
       let comment = await db.Comment.findAll({
@@ -333,6 +339,8 @@ const handleGetCommentService = (id) => {
         raw: true,
         nest: true,
         order: [["createdAt", "DESC"]],
+        offset : num, // skip num records
+        limit : 6, // get 2 records after skip 
       });
 
       if (comment) {

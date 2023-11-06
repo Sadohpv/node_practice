@@ -4,7 +4,7 @@ var jwt = require("jsonwebtoken");
 import "dotenv";
 const handleGetPost = async (req, res) => {
   let data = req.params;
-  let reg = await PostService.handleGetPostService(data.check);
+  let reg = await PostService.handleGetPostService(data.check,data.page);
  
   
   // console.log(reg);
@@ -164,8 +164,9 @@ const handleGetOnePost = async (req,res)=>{
 }
 const handleGetComment = async (req,res)=>{
   let data=req.params;
+  // console.log(data);
   if(data){
-    let reg = await PostService.handleGetCommentService(data.idPost);
+    let reg = await PostService.handleGetCommentService(data.idPost,+data.page);
     return res.status(200).json({
       errCode: 0,
       message: "Get Comment !",
