@@ -23,7 +23,12 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Comment,{
         foreignKey: 'idWhoComment',
       })
-      
+      User.hasMany(models.Notify,{
+        foreignKey: 'idUserFrom',
+      });
+      User.hasMany(models.Notify,{
+        foreignKey: 'idUserTo',
+      });
     }
   }
   User.init({
