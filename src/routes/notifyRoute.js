@@ -8,8 +8,8 @@ const router = express.Router();
 
 // router.all("*", checkUserJWT,checkUserPermission)
 router.get('/allNotify/:id',notifyController.handleGetNotify);
-
-// router.put('/putUpdateLikeComment',commentController.handleUpdateLikedComment);
+router.get('/readNotify/:id',notifyController.handleReadNotify);
+router.get('/numberNoRead/:id',notifyController.handleNumberNoReadNotify);
 
 
 module.exports = router;
