@@ -41,8 +41,19 @@ const handleUpdateLikedComment = async (req,res)=>{
   }
 
 };
-
+const handleTagFriendComment = async(req,res)=>{
+  let id = req.params.id;
+  // console.log(id);
+  let reg = await CommentService.handleTagFriendCommentService(id);
+  if (reg) {
+    return res.status(200).json({
+      EC: 0,
+      reg,
+    });
+  }
+}
 module.exports = {
   handleCheckLikedComment,
-  handleUpdateLikedComment
+  handleUpdateLikedComment,
+  handleTagFriendComment
 };

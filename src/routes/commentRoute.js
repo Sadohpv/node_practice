@@ -10,6 +10,7 @@ const router = express.Router();
 router.post('/checkLiked',commentController.handleCheckLikedComment);
 
 router.put('/putUpdateLikeComment',commentController.handleUpdateLikedComment);
+router.get('/tagFriend/:id',commentController.handleTagFriendComment);
 
 
 module.exports = router;
