@@ -2,10 +2,9 @@ import db from "../models/index";
 import { where, Op } from "sequelize";
 import { cloudinary } from "../utils/cloudinary";
 
-const handleGetPostService = (idUser,page) => {
+const handleGetPostService = (idUser, page) => {
   return new Promise(async (resolve, reject) => {
-    const num = (page == 1 ? 0 : (page * 4 - 4)); 
-   
+    const num = page == 1 ? 0 : page * 4 - 4;
 
     try {
       let post = await db.Post.findAll({
@@ -20,8 +19,8 @@ const handleGetPostService = (idUser,page) => {
         },
         raw: true,
         nest: true, // group include model into 1 object
-        offset : num, // skip num records
-        limit : 4, // get 2 records after skip 
+        offset: num, // skip num records
+        limit: 4, // get 2 records after skip
       });
 
       // const result = post.map(row => {
@@ -322,8 +321,8 @@ const handleGetOnePostService = (idPost, idUser) => {
     }
   });
 };
-const handleGetCommentService = (id,page) => {
-  const num = (page == 1 ? 0 : (page * 6 - 6)); 
+const handleGetCommentService = (id, page) => {
+  const num = page == 1 ? 0 : page * 6 - 6;
   return new Promise(async (resolve, reject) => {
     try {
       let comment = await db.Comment.findAll({
@@ -339,8 +338,8 @@ const handleGetCommentService = (id,page) => {
         raw: true,
         nest: true,
         order: [["createdAt", "DESC"]],
-        offset : num, // skip num records
-        limit : 6, // get 2 records after skip 
+        offset: num, // skip num records
+        limit: 6, // get 2 records after skip
       });
 
       if (comment) {
@@ -372,7 +371,15 @@ const handlePushCommentService = (data) => {
 
           likeComment: 0,
         });
-        resolve(true);
+        const tag = await handleNotifyTagInComment(
+          data.content,
+          data.idWhoComment
+        );
+        if (tag == true) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
       } else {
         resolve(false);
       }
@@ -380,6 +387,23 @@ const handlePushCommentService = (data) => {
       reject(error);
     }
   });
+};
+const handleNotifyTagInComment = (data, idUser) => {
+  let result = data.split("@t@g");
+  result = result.filter((e) => e.includes("@"));
+  if (result.length > 0) {
+    result.map(async (item) => {
+      await db.Notify.create({
+        idUserFrom: idUser,
+        idUserTo: item.slice(1),
+        status: 1,
+        content: 1,
+      });
+    });
+    return true;
+  } else {
+    return false;
+  }
 };
 export default {
   handleGetPostService,
