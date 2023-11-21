@@ -217,6 +217,12 @@ const handleAddFriendService = async (data) => {
 
           status: 2,
         });
+        await db.Notify.create({
+          idUserFrom: data.asking,
+          idUserTo: data.asked,
+          status: 1,
+          content: 3,
+        });
         resolve({
           EC: 0,
           EM: "SEND ADD FRIEND REQUEST !",
@@ -231,6 +237,7 @@ const handleAddFriendService = async (data) => {
 const handleCancelRequestService = async (data) => {
   return new Promise(async (resolve, reject) => {
     try {
+      console.log(data);
       let relationship = await db.Friend.findOne({
         attributes: ["id", "friend_1", "friend_2", "status"],
         where: {
@@ -243,7 +250,18 @@ const handleCancelRequestService = async (data) => {
       if (relationship) {
         await relationship.destroy();
         // await relationship.save();
-
+        let notify = await db.Notify.findOne({
+          where: {
+            idUserFrom: data.asking,
+            idUserTo: data.asked,
+            status: 0,
+            content: 3,
+          },
+          raw: false,
+        });
+        if (notify) {
+          await notify.destroy();
+        }
         resolve({
           EC: 0,
           EM: "CANCEL REQUEST SUCCESSFULLY !",
@@ -292,7 +310,7 @@ const handleAddFriendResponseService = async (id) => {
   return new Promise(async (resolve, reject) => {
     try {
       let relationship = await db.Friend.findAll({
-        include:{
+        include: {
           model: db.User,
           attributes: [
             "idUser",
@@ -306,11 +324,11 @@ const handleAddFriendResponseService = async (id) => {
         },
         attributes: ["id", "friend_1", "friend_2", "status"],
         where: {
-          friend_1 :id,
+          friend_1: id,
           status: 2,
         },
         raw: true,
-        nest:true,
+        nest: true,
       });
 
       if (relationship) {
@@ -331,31 +349,26 @@ const handleAddFriendAnswerService = async (data) => {
   return new Promise(async (resolve, reject) => {
     try {
       let relationship = await db.Friend.findOne({
-      
         attributes: ["id", "friend_1", "friend_2", "status"],
         where: {
-          friend_1 :data.friend_1,
-          friend_2 : data.friend_2,
+          friend_1: data.friend_1,
+          friend_2: data.friend_2,
           status: 2,
         },
         raw: false,
-       
       });
 
       if (relationship) {
-        if(data.answer === true){
+        if (data.answer === true) {
           // console.log("Here");
           relationship.status = 1;
           await relationship.save();
 
-           resolve("Accept Add Friend");
-
-        }else{
+          resolve("Accept Add Friend");
+        } else {
           await relationship.destroy();
-          resolve("Deny Add Friend")
+          resolve("Deny Add Friend");
         }
-
-
       } else {
         resolve({
           EC: 1,
@@ -368,11 +381,11 @@ const handleAddFriendAnswerService = async (data) => {
   });
 };
 
-const handleAddFriendRequestService = (id)=>{
+const handleAddFriendRequestService = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
       let relationship = await db.Friend.findAll({
-        include:{
+        include: {
           model: db.User,
           attributes: [
             "idUser",
@@ -386,11 +399,11 @@ const handleAddFriendRequestService = (id)=>{
         },
         attributes: ["id", "friend_1", "friend_2", "status"],
         where: {
-          friend_2 :id,
+          friend_2: id,
           status: 2,
         },
         raw: true,
-        nest:true,
+        nest: true,
       });
 
       if (relationship) {
@@ -406,11 +419,11 @@ const handleAddFriendRequestService = (id)=>{
     }
   });
 };
-const handleGetNumberAddFriendRequestService = async (id)=>{
+const handleGetNumberAddFriendRequestService = async (id) => {
   return new Promise(async (resolve, reject) => {
     try {
       let relationship = await db.Friend.findAll({
-        include:{
+        include: {
           model: db.User,
           attributes: [
             "idUser",
@@ -424,11 +437,11 @@ const handleGetNumberAddFriendRequestService = async (id)=>{
         },
         attributes: ["id", "friend_1", "friend_2", "status"],
         where: {
-          friend_1 :id,
+          friend_1: id,
           status: 2,
         },
         raw: true,
-        nest:true,
+        nest: true,
       });
 
       if (relationship) {
@@ -445,7 +458,7 @@ const handleGetNumberAddFriendRequestService = async (id)=>{
       reject(error);
     }
   });
-}
+};
 export default {
   handleGetMutualFriendService,
   handleUnfriendService,
@@ -455,5 +468,5 @@ export default {
   handleAddFriendResponseService,
   handleAddFriendAnswerService,
   handleAddFriendRequestService,
-  handleGetNumberAddFriendRequestService
+  handleGetNumberAddFriendRequestService,
 };

@@ -46,6 +46,7 @@ const handleGetPostService = (idUser, page) => {
 const handleAddPostService = (idWhoPost, data) => {
   return new Promise(async (resolve, reject) => {
     try {
+      // console.log("Here",data)
       if (!idWhoPost || !data.content) {
         resolve({
           errCode: 2,
@@ -61,19 +62,30 @@ const handleAddPostService = (idWhoPost, data) => {
         //     console.log(err);
         //   }
         // });
+        if (data.image !== "") {
+          const storageImg = await cloudinary.uploader.upload(data.image, {
+            folder: "social_data",
+          });
+          // console.log(storageImg);
+          await db.Post.create({
+            idWhoPost: idWhoPost,
+            content: data.content,
+            imgPost: storageImg.url,
+            likeCount: 0,
+            shareCount: 0,
+            shareIdPost: null,
+          });
+        } else {
+          await db.Post.create({
+            idWhoPost: idWhoPost,
+            content: data.content,
+            imgPost: "",
+            likeCount: 0,
+            shareCount: 0,
+            shareIdPost: null,
+          });
+        }
 
-        const storageImg = await cloudinary.uploader.upload(data.image, {
-          folder: "social_data",
-        });
-        // console.log(storageImg);
-        await db.Post.create({
-          idWhoPost: idWhoPost,
-          content: data.content,
-          imgPost: storageImg.url,
-          likeCount: 0,
-          shareCount: 0,
-          shareIdPost: null,
-        });
         resolve({
           errCode: 0,
           message: "OK",
@@ -351,6 +363,7 @@ const handleGetCommentService = (id, page) => {
   });
 };
 const handlePushCommentService = (data) => {
+  console.log(data);
   return new Promise(async (resolve, reject) => {
     try {
       let post = await db.Post.findOne({
@@ -371,15 +384,18 @@ const handlePushCommentService = (data) => {
 
           likeComment: 0,
         });
-        const tag = await handleNotifyTagInComment(
-          data.content,
-          data.idWhoComment
-        );
-        if (tag == true) {
-          resolve(true);
-        } else {
-          resolve(false);
+        if (data.content.includes("@t@g")) {
+          const tag = await handleNotifyTagInComment(
+            data.content,
+            data.idWhoComment
+          );
+          if (tag == true) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
         }
+        resolve(true);
       } else {
         resolve(false);
       }
@@ -396,7 +412,7 @@ const handleNotifyTagInComment = (data, idUser) => {
       await db.Notify.create({
         idUserFrom: idUser,
         idUserTo: item.slice(1),
-        status: 1,
+        status: 0,
         content: 1,
       });
     });
