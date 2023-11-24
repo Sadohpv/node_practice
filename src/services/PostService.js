@@ -18,6 +18,7 @@ const handleGetPostService = (idUser, page) => {
           privatePost: 0,
         },
         raw: true,
+        order: [["createdAt", "DESC"]],
         nest: true, // group include model into 1 object
         offset: num, // skip num records
         limit: 4, // get 2 records after skip
@@ -363,7 +364,7 @@ const handleGetCommentService = (id, page) => {
   });
 };
 const handlePushCommentService = (data) => {
-  console.log(data);
+  // console.log(data);
   return new Promise(async (resolve, reject) => {
     try {
       let post = await db.Post.findOne({
