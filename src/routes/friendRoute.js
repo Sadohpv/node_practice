@@ -18,5 +18,6 @@ router.post('/addNumberFriendResponse',friendController.handleNumberAddFriendRes
 
 router.post('/addFriendAnswer',friendController.handleAddFriendAnswer);
 router.post('/addFriendRequest',friendController.handleAddFriendRequest);
+router.post('/friendRecommend',friendController.handleFriendRecommend);
 
 module.exports = router;

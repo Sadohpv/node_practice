@@ -459,6 +459,103 @@ const handleGetNumberAddFriendRequestService = async (id) => {
     }
   });
 };
+const handleFriendRecommendService = async (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let relationship = await db.Friend.findAll({
+        attributes: ["id", "friend_1", "friend_2", "status"],
+        where: {
+          [Op.or]: [
+            { friend_1: { [Op.eq]: id } },
+            { friend_2: { [Op.eq]: id } },
+          ],
+
+          status: 1,
+        },
+        raw: true,
+        nest: true,
+      });
+      const result = [];
+      relationship.map((item) => {
+        if (item.friend_1 === 10) {
+          result.push(item.friend_2);
+        } else {
+          result.push(item.friend_1);
+        }
+      });
+      // console.log(id, "Here");
+      const mutual = await db.Friend.findAll({
+        where: {
+          [Op.or]: [
+            { friend_1: { [Op.in]: result } },
+            { friend_2: { [Op.in]: result } },
+          ],
+          friend_1: { [Op.ne]: id },
+          friend_2: { [Op.ne]: id },
+
+          //  : { [Op.notIn]: result},
+          status: 1,
+        },
+      });
+      const recommend = [];
+      mutual.map((item) => {
+        if (!result.includes(item.friend_1)) {
+          recommend.push(item.friend_1);
+        } else if (!result.includes(item.friend_2)) {
+          recommend.push(item.friend_2);
+        }
+      });
+
+      const outReq = await db.Friend.findAll({
+        attributes: ["id", "friend_1", "friend_2", "status"],
+        where: {
+          [Op.or]: [
+            { friend_1: { [Op.eq]: id } },
+            { friend_2: { [Op.eq]: id } },
+          ],
+
+          status: 2,
+        },
+      });
+      const outRecommend = [];
+      outReq.map((item) => {
+        if (item.friend_1 === id) {
+          outRecommend.push(item.friend_2);
+        } else {
+          outRecommend.push(item.friend_1);
+        }
+      });
+
+      const lastResult =[...new Set(recommend.filter( x => !outRecommend.includes(x)))];
+
+      const final =  await db.User.findAll({
+        attributes: [
+          "idUser",
+          "userName",
+          "avatar",
+          "address",
+          "firstName",
+          "lastName",
+        ],
+        where: {
+          idUser: { [Op.in]: lastResult } 
+        },
+      });
+
+      if (final) {
+        // const result = [...new Set(lastResult)]
+        resolve(final);
+      } else {
+        resolve({
+          EC: 1,
+          EM: "NOT FOUND RELATIONSHIP !",
+        });
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 export default {
   handleGetMutualFriendService,
   handleUnfriendService,
@@ -469,4 +566,5 @@ export default {
   handleAddFriendAnswerService,
   handleAddFriendRequestService,
   handleGetNumberAddFriendRequestService,
+  handleFriendRecommendService,
 };
