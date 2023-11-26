@@ -9,6 +9,8 @@ const router = express.Router();
 router.all("*", checkUserJWT,checkUserPermission)
 router.get('/account',userController.handleGetAccount);
 router.post("/login", userController.handleLogin);
+router.get("/logout", userController.handleLogout);
+
 router.post("/getDataUser", userController.handleGetDataUser);
 router.post("/getCreateUser", userController.handleCreateUser);
 router.delete("/deleteUser",userController.handleDeleteUser);

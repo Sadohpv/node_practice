@@ -36,7 +36,24 @@ const handleLogin = async (req, res) => {
     accessToken,
   });
 };
+const handleLogout = async (req,res)=>{
+  try{
 
+    res.clearCookie("token");
+    
+    return res.status(200).json({
+      EM : "OK",
+      EC : 0,
+    }).end();
+  }catch{
+    return res.status(404).json({
+      EM : "Something wrong!",
+      EC : 1,
+    });
+  }
+  // return userInfor
+ 
+};
 const handleGetDataUser = async (req, res) => {
   //let id = req.query.id;
   // let id = req.body.id;
@@ -147,4 +164,5 @@ export default {
   handleSearchUser,
   handleGetAccount,
   handleGetAllFriend,
+  handleLogout
 };
