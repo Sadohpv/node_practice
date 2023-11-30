@@ -29,6 +29,9 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Notify,{
         foreignKey: 'idUserTo',
       });
+      User.hasMany(models.SavePost,{
+        foreignKey: 'idUserSaved',
+      });
     }
   }
   User.init({

@@ -1,9 +1,7 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+import { Model } from 'sequelize';
 module.exports = (sequelize, DataTypes) => {
-  class Post extends Model {
+  class SavePost extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,31 +9,31 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Post.hasMany(models.SavePost,{
+      SavePost.belongsTo(models.User,{
+        foreignKey: 'idUserSaved',
+       
+
+      });
+      SavePost.belongsTo(models.Post,{
         foreignKey: 'idPostSaved',
+       
+
       });
     }
   }
-  Post.init({
-    idPost: {
+  SavePost.init({
+    id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    idWhoPost: DataTypes.INTEGER,
-    content: DataTypes.STRING,
-    imgPost: DataTypes.STRING,
-
-    likeCount: DataTypes.INTEGER,
-    commentCount: DataTypes.INTEGER,
-
-    shareCount: DataTypes.INTEGER,
-    shareIdPost: DataTypes.INTEGER,  
-    privatePost:  DataTypes.BOOLEAN,  
+    idPostSaved: DataTypes.INTEGER,
+    idUserSaved: DataTypes.INTEGER,
+    
   }, {
     sequelize,
-    modelName: 'Post',
-    freezeTableName : true,
+    modelName: 'SavePost',
+    
   });
-  return Post;
+  return SavePost;
 };
