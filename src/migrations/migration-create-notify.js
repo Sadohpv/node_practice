@@ -3,7 +3,6 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("Notify", {
-
       id: {
         primaryKey: true,
         allowNull: false,
@@ -11,16 +10,19 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       idUserFrom: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
       },
       idUserTo: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
       },
       status: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
       },
       content: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
+      },
+      linked: {
+        type: Sequelize.INTEGER,
       },
       createdAt: {
         allowNull: false,

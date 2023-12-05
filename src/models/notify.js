@@ -32,6 +32,8 @@ module.exports = (sequelize, DataTypes) => {
      idUserTo : DataTypes.INTEGER,
      status : DataTypes.INTEGER,
      content : DataTypes.INTEGER,
+     linked : DataTypes.INTEGER,
+
   }, {
     sequelize,
     modelName: 'Notify',

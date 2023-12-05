@@ -216,6 +216,51 @@ const handlePushComment = async (req,res)=>{
     });
   }
 };
+const handleSavePost = async (req,res)=>{
+  let data=req.body;
+  // console.log(data);
+  if(data){
+   
+    if(data.idUser !== undefined & data.idPostSave !== undefined){
+      let reg = await PostService.handleSavePostService(data.idUser,data.idPostSave);
+
+      if(reg === true){
+        return res.status(200).json({
+          errCode: 0,
+          message: "Save Post !",
+         
+        });
+      }else if(reg===null){
+        return res.status(200).json({
+          errCode: 3,
+          message: "Post has been save !",
+         
+        });
+      }
+      else{
+        return res.status(400).json({
+          errCode: 2,
+          message: "Save Post Fail !",
+        
+        });
+      }
+
+      
+    }else{
+      return res.status(400).json({
+        errCode: 1,
+        message: "Missing Data !",
+     
+      });
+    }
+  }else{
+    return res.status(400).json({
+      errCode: 5,
+      message: "Something Wrong !",
+      
+    });
+  }
+};
 export default {
   handleGetPost,
   handleAddPost,
@@ -226,5 +271,6 @@ export default {
   handleGetOwnerPost,
   handleGetOnePost,
   handleGetComment,
-  handlePushComment
+  handlePushComment,
+  handleSavePost
 };

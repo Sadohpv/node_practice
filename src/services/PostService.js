@@ -422,6 +422,37 @@ const handleNotifyTagInComment = (data, idUser) => {
     return false;
   }
 };
+const handleSavePostService = async (user, post) => {
+ 
+  return new Promise(async (resolve, reject) => {
+    if (user && post) {
+      // console.log("Here",user,post)
+
+      const check = await db.SavePost.findOne({
+        where: {
+          idPostSaved: post,
+          idUserSaved: user,
+        },
+      });
+      
+      if (check) {
+        resolve(null);
+      } else {
+        try {
+          await db.SavePost.create({
+            idPostSaved: post,
+            idUserSaved: user,
+          });
+          resolve(true);
+        } catch (e) {
+          resolve(false);
+        }
+      }
+    } else {
+      resolve(false);
+    }
+  });
+};
 export default {
   handleGetPostService,
   handleAddPostService,
@@ -433,4 +464,5 @@ export default {
   handleGetOnePostService,
   handleGetCommentService,
   handlePushCommentService,
+  handleSavePostService,
 };

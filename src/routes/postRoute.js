@@ -17,5 +17,7 @@ router.post('/ownerPost',postController.handleGetOwnerPost);
 router.post('/onePost',postController.handleGetOnePost);
 router.get('/comment/:idPost/:page',postController.handleGetComment);
 router.post('/pushComment',postController.handlePushComment);
+router.post('/savePost',postController.handleSavePost);
+
 
 module.exports = router;
