@@ -1,5 +1,5 @@
-'use strict';
-import { Model } from 'sequelize';
+"use strict";
+import { Model } from "sequelize";
 module.exports = (sequelize, DataTypes) => {
   class SavePost extends Model {
     /**
@@ -9,31 +9,33 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      SavePost.belongsTo(models.User,{
-        foreignKey: 'idUserSaved',
-       
+      SavePost.belongsTo(models.User, {
+        foreignKey: "idUserSaved",
 
+       
       });
-      SavePost.belongsTo(models.Post,{
-        foreignKey: 'idPostSaved',
-       
+      SavePost.belongsTo(models.Post, {
+        foreignKey: "idPostSaved",
 
+      
+       
       });
     }
   }
-  SavePost.init({
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
+  SavePost.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      idPostSaved: DataTypes.INTEGER,
+      idUserSaved: DataTypes.INTEGER,
     },
-    idPostSaved: DataTypes.INTEGER,
-    idUserSaved: DataTypes.INTEGER,
-    
-  }, {
-    sequelize,
-    modelName: 'SavePost',
-    
-  });
+    {
+      sequelize,
+      modelName: "SavePost",
+    }
+  );
   return SavePost;
 };

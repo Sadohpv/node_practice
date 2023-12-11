@@ -290,6 +290,61 @@ const handleGetOwnerPostService = async (data) => {
     }
   });
 };
+const handleGetOwnerPhotoService = async (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let post = {};
+      if (+data.userPage === data.owner) {
+        // console.log("Authentic");
+        post = await db.Post.findAll({
+          include: [
+            {
+              model: db.User,
+              attributes: ["idUser", "userName", "avatar"],
+            },
+          ],
+          where: {
+            idWhoPost: data.userPage,
+            imgPost : {[Op.ne] : ''},
+          },
+          raw: true,
+          nest: true, // group include model into 1 object
+        });
+      } else {
+        // console.log(data.userPage);
+
+        post = await db.Post.findAll({
+          include: [
+            {
+              model: db.User,
+              attributes: ["idUser", "userName", "avatar"],
+            },
+          ],
+          where: {
+            idWhoPost: data.userPage,
+            privatePost: 0,
+          },
+
+          raw: true,
+          nest: true, // group include model into 1 object
+        });
+      }
+      const liked = await handleCheckLikeService(data.owner);
+      // console.log(liked);
+      post.map((p) => {
+        if (liked.includes(p.idPost)) {
+          p.userLiked = true;
+        } else {
+          p.userLiked = false;
+        }
+      });
+      // console.log(post);
+      resolve(post);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 const handleGetOnePostService = (idPost, idUser) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -423,7 +478,6 @@ const handleNotifyTagInComment = (data, idUser) => {
   }
 };
 const handleSavePostService = async (user, post) => {
- 
   return new Promise(async (resolve, reject) => {
     if (user && post) {
       // console.log("Here",user,post)
@@ -434,7 +488,7 @@ const handleSavePostService = async (user, post) => {
           idUserSaved: user,
         },
       });
-      
+
       if (check) {
         resolve(null);
       } else {
@@ -453,6 +507,57 @@ const handleSavePostService = async (user, post) => {
     }
   });
 };
+const handleGetSavedPostService = async (idUser) => {
+  return new Promise(async (resolve, reject) => {
+    if (idUser) {
+      // console.log(idUser);
+
+      const post = await db.SavePost.findAll({
+        attributes: ["idPostSaved"],
+        where: {
+          idUserSaved: idUser,
+        },
+        raw: true,
+        nest: true,
+      });
+      let array = [];
+      // console.log(post);
+
+      if (post) {
+        await post.map((item) => {
+          array.push(item.idPostSaved);
+        });
+
+        const result = await db.Post.findAll({
+          include: [
+            {
+              model: db.User,
+              attributes: ["idUser", "userName", "avatar"],
+            },
+          ],
+          where: {
+            idPost: { [Op.in]: array },
+            privatePost: 0,
+          },
+          raw: true,
+          nest: true,
+        });
+        const liked = await handleCheckLikeService(idUser);
+        await result.map((p) => {
+          if (liked.includes(p.idPost)) {
+            p.userLiked = true;
+          } else {
+            p.userLiked = false;
+          }
+        });
+        // console.log(result)
+        resolve(result);
+      }
+    } else {
+      resolve(false);
+    }
+  });
+};
 export default {
   handleGetPostService,
   handleAddPostService,
@@ -465,4 +570,6 @@ export default {
   handleGetCommentService,
   handlePushCommentService,
   handleSavePostService,
+  handleGetSavedPostService,
+  handleGetOwnerPhotoService
 };

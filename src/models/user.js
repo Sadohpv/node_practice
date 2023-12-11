@@ -31,6 +31,8 @@ module.exports = (sequelize, DataTypes) => {
       });
       User.hasMany(models.SavePost,{
         foreignKey: 'idUserSaved',
+      
+
       });
     }
   }

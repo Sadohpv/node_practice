@@ -13,6 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Post.hasMany(models.SavePost,{
         foreignKey: 'idPostSaved',
+
+
       });
     }
   }
