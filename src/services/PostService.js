@@ -54,24 +54,27 @@ const handleAddPostService = (idWhoPost, data) => {
           message: "Missing data required",
         });
       } else {
-        // let storageImg =
-        //   `D:/Subject/LearnSomething/ReactJS/Test_React/Test4/node_practice/src/data/post/user${idWhoPost}/` +
-        //   file.name;
-
-        // file.mv(storageImg, (err) => {
-        //   if (err) {
-        //     console.log(err);
-        //   }
-        // });
+        // console.log(data.image)
+        let storageImg ;
         if (data.image !== "") {
-          const storageImg = await cloudinary.uploader.upload(data.image, {
+          if(data.video == false){
+
+             storageImg = await cloudinary.uploader.upload(data.image, {
             folder: "social_data",
           });
+          }else{
+             storageImg = await cloudinary.uploader.upload_large(data.image, {
+              folder: "social_data",
+              resource_type: "video"
+            });
+          }
           // console.log(storageImg);
           await db.Post.create({
             idWhoPost: idWhoPost,
             content: data.content,
             imgPost: storageImg.url,
+            imgVideo: data.video,
+
             likeCount: 0,
             shareCount: 0,
             shareIdPost: null,
@@ -81,6 +84,8 @@ const handleAddPostService = (idWhoPost, data) => {
             idWhoPost: idWhoPost,
             content: data.content,
             imgPost: "",
+            imgVideo: 0,
+
             likeCount: 0,
             shareCount: 0,
             shareIdPost: null,

@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     idWhoPost: DataTypes.INTEGER,
     content: DataTypes.STRING,
     imgPost: DataTypes.STRING,
-
+    videoPost : DataTypes.BOOLEAN,
     likeCount: DataTypes.INTEGER,
     commentCount: DataTypes.INTEGER,
 
