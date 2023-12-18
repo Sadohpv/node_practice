@@ -311,6 +311,7 @@ const handleGetOwnerPhotoService = async (data) => {
           where: {
             idWhoPost: data.userPage,
             imgPost : {[Op.ne] : ''},
+            videoPost : 0,
           },
           raw: true,
           nest: true, // group include model into 1 object
