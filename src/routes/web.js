@@ -5,6 +5,7 @@ import postRouter from './postRoute'
 import friendRouter from './friendRoute'
 import commentRouter from './commentRoute'
 import notifyRouter from "./notifyRoute"
+import chatRouter from "./chatRoute"
 const router = express.Router();
 
 const initWebRoutes = (app) => {
@@ -22,6 +23,7 @@ const initWebRoutes = (app) => {
     app.use('/friend',friendRouter);
     app.use('/comment',commentRouter);
     app.use('/notify',notifyRouter);
+    app.use('/chat',chatRouter);
 
 
     return app.use('/', router);
